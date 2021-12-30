@@ -17,8 +17,8 @@ type Book struct {
 	Storage
 }
 
-func CreateBookModule() client.BookInterface {
-	return &Book{Storage{collection:"adminBookDBc",Database:database.Connect("localhost", "libDB", "libraryDatabase")}}
+func CreateBookModule(host, dbName string) models.BookInterface {
+	return &Book{Storage{collection:"adminBookDBc",Database:database.Connect(host,dbName, "libraryDatabase")}}
 }
 
 func (b *Book) GetAll(c *gin.Context) {
@@ -99,6 +99,8 @@ func (b *Book) checkUniq(newBook client.Book) error {
 	case book.Author != newBook.Author:
 		return nil
 	case book.Name != newBook.Name:
+		return nil
+	case book.Publisher != newBook.Publisher:
 		return nil
 	case book.PublishYear != newBook.PublishYear:
 		return nil
