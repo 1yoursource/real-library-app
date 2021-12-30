@@ -19,8 +19,11 @@ $(function() {
 
     $('#searchBookByName').on('click tap',function(){
         console.log("here 1 searchBookByName")
+        var bookName = $('#searchBookByNameInput').val();
+        console.log("here 1 searchBookByName", bookName)
         $.ajax({
             url: '/ajax/booking/searchBookByName',
+            data: {bookName: bookName},
             type: 'POST',
             timeout: 15000,
             error: function(result) {
@@ -31,15 +34,16 @@ $(function() {
                     window.res = result.result
                     for (var i = 0; i<result.result.length; i++) {
                         console.log(result.result[i]);
-                        $("#adm_search_table").append('<tr>'+
-                            '<td>'+result.result[i].Id+'</td>'+
-                            '<td>'+result.result[i].Name+'</td>'+
-                            '<td>'+result.result[i].Author+'</td>'+
+                        $("#user_search_table").append('<tr>'+
+                            '<td>'+result.result[i].id+'</td>'+
+                            '<td>'+result.result[i].name+'</td>'+
+                            '<td>'+result.result[i].author+'</td>'+
                             '<td><a id="adm_book_delete"></a></td>'+
                             '</tr>');
 
                     }
                 } else {
+                    console.log("sfesffsfse result.error", result.error)
                     console.log("eeeeeeeerr")
                 }
             },
@@ -48,28 +52,32 @@ $(function() {
 
     $('#searchBookByAuthor').on('click tap',function(){
         console.log("here 1 searchBookByAuthor")
+        var author = $('#searchBookByAuthorInput').val();
         $.ajax({
             url: '/ajax/booking/searchBookByAuthor',
+            data: {author: author},
             type: 'POST',
             timeout: 15000,
             error: function(result) {
                 console.log(result)
             },
             success: function(result) {
+                console.log("sfesffsfse result.error")
                 if (result.error === null) {
                     window.res = result.result
                     for (var i = 0; i<result.result.length; i++) {
                         console.log(result.result[i]);
-                        $("#adm_search_table").append('<tr>'+
-                            '<td>'+result.result[i].Id+'</td>'+
-                            '<td>'+result.result[i].Name+'</td>'+
-                            '<td>'+result.result[i].Author+'</td>'+
+                        $("#user_search_table").append('<tr>'+
+                            '<td>'+result.result[i].id+'</td>'+
+                            '<td>'+result.result[i].name+'</td>'+
+                            '<td>'+result.result[i].author+'</td>'+
                             '<td><a id="adm_book_delete"></a></td>'+
                             '</tr>');
 
                     }
                 } else {
                     console.log("eeeeeeeerr")
+                    console.log("sfesffsfse result.error", result.error)
                 }
             },
         });

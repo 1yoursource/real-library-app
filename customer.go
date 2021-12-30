@@ -144,11 +144,7 @@ func (u *UserModule) GetAllTakenBooks(c *gin.Context)  {
 		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
 		return
 	}
-	//booksList := []string{}
-	//for _, book := range user.Books {
-	//	// записываем список книг с авторами, которые на руках у данного пользователя
-	//	booksList = append(booksList, book.Name+", "+book.Author)
-	//}
+
 
 	c.JSON(http.StatusOK, obj{"books": user.Books})
 
@@ -210,6 +206,49 @@ func (r *Registration) CheckEmail() error {
 func (u *UserModule) BlockUser() {
 
 }
+
+func (u *UserModule) SearchBookByTitle(c *gin.Context)  {
+	inputData := struct {
+		BookName string `form:"bookName"`
+	}{}
+	if err := c.Bind(&inputData); err != nil {
+		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
+		return
+	}
+	fmt.Println("here 1 searchBookByName", inputData)
+
+	books := []Book{}
+	err := storage.C("books").Find(obj{"name":inputData.BookName}).All(&books)
+	if err != nil {
+		fmt.Println("customer.go -> SearchBookByTitle -> books not found, err:", err)
+		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
+		return
+	}
+	fmt.Println("sfsfsefeef SearchBookByTitle", books)
+	c.JSON(http.StatusOK, obj{"error":nil, "result":books})
+}
+func (u *UserModule) SearchBookByAuthor(c *gin.Context)  {
+	inputData := struct {
+		Author string `form:"author"`
+	}{}
+	if err := c.Bind(&inputData); err != nil {
+		fmt.Println("customer.go -> SearchBookByAuthor -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
+		return
+	}
+fmt.Println("SearchBookByAuthor AAAAAAAAAAAAAAAAAAAAA")
+	books := []Book{}
+	err := storage.C("books").Find(obj{"author":inputData.Author}).All(&books)
+	if err != nil {
+		fmt.Println("customer.go -> SearchBookByAuthor -> books not found, err:", err)
+		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
+		return
+	}
+	fmt.Println("sfsefsefs AAAAAAAAAAAA", books)
+	c.JSON(http.StatusOK, obj{"error":nil, "result":books})
+}
+
 func (u *UserModule) Ajax(c *gin.Context) {
 	switch c.Param("method") {
 	case "getBook":
@@ -219,10 +258,10 @@ func (u *UserModule) Ajax(c *gin.Context) {
 		u.ReturnBook(c)
 	case "getAllTakenBooks":
 		u.GetAllTakenBooks(c)
-	//case "searchBookByName":
-	//	u.(c)
-	//case "searchBookByAuthor":
-	//	u.(c)
+	case "searchBookByName":
+		u.SearchBookByTitle(c)
+	case "searchBookByAuthor":
+		u.SearchBookByAuthor(c)
 	default:
 		c.String(http.StatusBadRequest, "Method not found in module \"PRO<O\"!")
 	}
