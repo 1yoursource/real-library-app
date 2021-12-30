@@ -22,3 +22,7 @@ func (b *BookModule) Edit() {
 func (b *BookModule) Delete() {
 
 }
+
+func AddBookToUsersList(id uint64) {
+
+}

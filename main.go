@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/carlescere/scheduler"
 	"net/http"
 	"os"
 	"os/signal"
@@ -52,6 +53,7 @@ func main() {
 	if err := r.Run(":2200"); err != nil {
 		fmt.Println("main.go -> main: err = ", err)
 	}
+	scheduler.Every().Day().At("00:30:00").Run(MakeDebtorsList)
 }
 func ajax(c *gin.Context) {
 	c.Header("Expires", time.Now().String())
