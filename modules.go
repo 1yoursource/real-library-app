@@ -1,5 +1,10 @@
 package main
 
+import (
+	 "lib-client-server/client/main_opt"
+	"lib-client-server/client/models"
+)
+
 type (
 	ClientServer interface {
 	}
@@ -7,9 +12,11 @@ type (
 
 var (
 	pages   *PagesModule
-	storage *StorageModule
+	storage *StorageModule // authorization storage
 	auth    *AuthModule
 	user    *UserModule
+	clientStorage models.StorageInterface
+
 )
 
 func CreateModules() {
@@ -17,6 +24,11 @@ func CreateModules() {
 	user = createUserModule()
 	pages = createPagesModule()
 	storage = createStorageModule("localhost", "libDB", "libraryDatabase")
+	clientStorage = createBookStorageModule("localhost", "libDB", "libraryDatabase")
+}
+
+func createBookStorageModule(host, name, cname string) models.StorageInterface {
+	return main_opt.CreateBookStorageModule(host, name, cname)
 }
 
 func createPagesModule() *PagesModule {

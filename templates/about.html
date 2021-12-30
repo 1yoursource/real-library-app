@@ -92,7 +92,11 @@
                             <a href="/shell" class="nav-link__item">Особистий кабінет</a>
                             </li>
                           <li data-id="#submenu_7" class="nav-link submenu_li">
-                              <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{if .notLogin}}
+                                  <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{else}}
+                                  <a href="/logout" class="nav-link__item">Вихід</a>
+                              {{end}}
                           </li>
               </ul>
                             <div class="gamburger-icon">
@@ -137,7 +141,13 @@
             <h2><a href="/shell">Особистий кабінет</a></h2>
           </div>	
                   <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/auth">Реєстрація/Авторізація</a></h2>
+            <h2>
+                {{if .notLogin}}
+                    <a href="/auth">Реєстрація/Авторізація</a>
+                {{else}}
+                    <a href="/logout">Вихід</a>
+                {{end}}
+            </h2>
           </div>				
                 <div class="mbl-blind-nav">
           <ul>
@@ -292,10 +302,12 @@
 					</span>
 				</p>
 			</div>
+            <!--
 			<div class="btn-wrap">
 				<a data-name="Реєстрація/Авторізація" title="Реєстрація/Авторізація" class="btn-wrap__footer button" href="/auth" title="Реєстрація/Авторізація"><span>Реєстрація/Авторізація</span></a>
 			</div>
 		</div>
+            -->
 		<div class="row gutters10 link-other__footer">
 					<div class="col-md-4 link-other">
             <a href="/about"><h2>Про нас</h2></a>
@@ -312,6 +324,7 @@
           <a href="/shell"><h2>Моя поличка</h2></a>
 					</div>
 				</div>
+        </div>
 	</section>
 	<div class="copy-site">
 		<p>Всі права захищені. Державне підприємство "Національні інформаційні системи" ©  2021</p>
