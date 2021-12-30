@@ -99,6 +99,7 @@ func (r *Registration) passwordCompare() bool {
 
 func (a *AuthModule) Login(c *gin.Context, email string, id bson.ObjectId) {
 	fmt.Println("login")
+	//setCookie(c, "lib-customer", fmt.Sprint("user", "*lib"))
 	setCookie(c, "lib-login", fmt.Sprint(email, "*lib"))
 	setCookie(c, "lib-id", fmt.Sprint(id, "*lib"))
 	c.JSON(http.StatusOK, obj{"error": nil, "url": "/"})
@@ -106,6 +107,7 @@ func (a *AuthModule) Login(c *gin.Context, email string, id bson.ObjectId) {
 
 func (a *AuthModule) Logout(c *gin.Context) {
 	deleteCookie(c, "lib-login")
+	//deleteCookie(c, "lib-customer")
 	deleteCookie(c, "lib-id")
 	pages.Auth(c)
 }

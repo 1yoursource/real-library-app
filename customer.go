@@ -159,7 +159,7 @@ func (u *UserModule) CreateUser(data Registration, id bson.ObjectId) error {
 	}
 
 	user := User{
-		Id:           id,
+		Id:        id   ,
 		TicketNumber: fmt.Sprint(len(data.LastName), data.Faculty, "-", time.Now().UnixNano()),
 		FirstName:    data.FirstName,
 		LastName:     data.LastName,

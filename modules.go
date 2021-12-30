@@ -1,7 +1,8 @@
 package main
 
 import (
-	 "lib-client-server/client/main_opt"
+	"lib-client-server/client/admin"
+	"lib-client-server/client/main_opt"
 	"lib-client-server/client/models"
 )
 
@@ -15,7 +16,12 @@ var (
 	storage *StorageModule // authorization storage
 	auth    *AuthModule
 	user    *UserModule
+	// book stotage
 	clientStorage models.StorageInterface
+
+	//adm
+	adminPages *admin.PagesModule
+	adminBooks models.BookInterface
 
 )
 
@@ -25,6 +31,10 @@ func CreateModules() {
 	pages = createPagesModule()
 	storage = createStorageModule("localhost", "libDB", "clientAuthDBc")
 	clientStorage = createBookStorageModule("localhost", "libDB", "clientBookDBc")
+
+	//
+	adminPages = createAdminPagesModule("admin")
+	adminBooks = createAdminBookModule("localhost","libDB")
 }
 
 func createBookStorageModule(host, name, cname string) models.StorageInterface {
@@ -46,3 +56,13 @@ func createAuthModule() *AuthModule {
 func createStorageModule(host, name, cname string) *StorageModule {
 	return StorageModule{host: host, name: name, cname: cname}.CreateConnect()
 }
+
+//
+
+func createAdminPagesModule(prefixPage string) *admin.PagesModule {
+	return admin.CreateAdminPagesModule(prefixPage)
+}
+func createAdminBookModule(host, name string) models.BookInterface {
+	return admin.CreateAdminBookModule(host, name)
+}
+

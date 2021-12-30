@@ -22,6 +22,11 @@ func CreateBookModule() models.BookInterface {
 	return &BookMod{}
 }
 
+func (b *BookMod) Handler(c *gin.Context) {
+	// has rights?
+	c.JSON(http.StatusOK, models.Obj{"result": b.Storage.GetAll()})
+}
+
 func (b *BookMod) GetAll(c *gin.Context) {
 	//var books []client.Book
 	//b.FreeBooksMut.RLock()
@@ -36,7 +41,7 @@ func (b *BookMod) GetAll(c *gin.Context) {
 func (b *BookMod) Create(c *gin.Context) { // взять
 	inputData := GetBook{}
 	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("auth.go -> Registration -> Bind: err = ", err)
+		fmt.Println("customer book Create -> Bind: err = ", err)
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
 		return
 	}
