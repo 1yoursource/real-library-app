@@ -14,6 +14,7 @@ type (
 		Publisher   string        `form:"publisher" bson:"publisher"`
 		PagesCount  uint64        `form:"pagesCount" bson:"pagesCount"`
 		ReturnDate  time.Time     `form:"returnDate" bson:"returnDate"`
+		TakenBy     string    `json:"takenBy" bson:"takenBy"` // кем взято, если "" - книга доступна для взятия
 	}
 
 	AuthInterface interface {

@@ -38,8 +38,9 @@ $(function() {
                         if (result.result[i].takenBy === getCookie("lib-id")) {
                             var bookAction = '<a id="user_book_return" >Повернути книгу</a>'
                         } else if (result.result[i].takenBy === ""){
-                            var bookAction = '<input id="user_book_get" value="result.result[i].id">Взяти книгу</input>'
-                        } else {
+                            var bookAction =  '<input type="submit" title="Взяти книгу" id="searchBookByAuthorInput" value="result.result[i].id" class="form-control required" data-valid="email">'
+
+                              } else {
                             var bookAction = '<a id="user_book_absent">Книги немає у наявності</a>'
                         }
                         console.log(result.result[i]);
