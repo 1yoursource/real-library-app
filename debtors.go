@@ -1,9 +1,8 @@
 package main
 
 import (
-	"net/http"
-	"time"
 	"fmt"
+	"time"
 )
 
 // запускается каждый день после полуночи

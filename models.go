@@ -24,8 +24,8 @@ type (
 		Books []Book
 	}
 	DebtorsList struct {
-		Date string `json:"date" bson:"date"`
-		Debtors []Debtor
+		Date string `json:"date" bson:"_id"`
+		Debtors []Debtor `bson:"debtors"`
 	}
 	//Test struct {
 	//	Id   uuid.UUID `sql:"id"`

@@ -3,6 +3,7 @@ module lib-client-server
 go 1.14
 
 require (
+	github.com/carlescere/scheduler v0.0.0-20170109141437-ee74d2f83d82
 	github.com/gin-gonic/gin v1.7.4
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/golang/protobuf v1.5.2 // indirect
