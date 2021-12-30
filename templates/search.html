@@ -176,18 +176,20 @@
           <form action="/" method="POST" id="search-el-form" class="row gutters10 form-feedback">
             <div class="col-md-6 feedback-left-block">
               <div class="form-group">
-                <input type="type" name="input_search" id="input_search" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
-              </div>	
+                <input type="type" name="input_search" id="searchBookByNameInput" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
+                 <a id="searchBookByName" data-name="searchBtnByName" title="Пошук" class="btn-wrap__footer button" href="#"><span>Шукати за назвою</span></a>
+
+              </div>
               <div class="btn-wrap">
-                <a id="searchBookByName" data-name="searchBtnByName" title="Пошук" class="btn-wrap__footer button" href="#"><span>Назва книги</span></a>
-                <a id="searchBookByAuthor" data-name="searchBtnByAuthor" title="Пошук" class="btn-wrap__footer button" href="#"><span>Автор</span></a>
+                  <input type="type" name="input_search" id="searchBookByAuthorInput" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
+                  <a id="searchBookByAuthor" data-name="searchBtnByAuthor" title="Пошук" class="btn-wrap__footer button" href="#"><span>Шукати за автором</span></a>
                   <br>
                   <a id="getAllUsersBooks" data-name="getAllUsersBooks" title="Пошук" class="btn-wrap__footer button" href="#"><span>Мої книги</span></a>
               </div>				
             </div>
           </form>
           <div class="row search-item">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="user_search_table">
               <thead>
                 <tr>
                   <th scope="col">BookID</th>
@@ -197,12 +199,6 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td></td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
               </tbody>
             </table>
           </div>
