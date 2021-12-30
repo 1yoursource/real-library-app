@@ -9,6 +9,6 @@ type (
 )
 
 //storage = createStorageModule("localhost", "libDB", "libraryDatabase")
-func CreateBookStorageModule(host, name, cname string) models.StorageInterface {
+func CreateCustomerBookStorageModule(host, name, cname string) models.StorageInterface {
 	return customer.CreateConnect(host, name, cname)
 }

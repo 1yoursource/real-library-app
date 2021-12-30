@@ -23,12 +23,12 @@ func CreateModules() {
 	auth = createAuthModule()
 	user = createUserModule()
 	pages = createPagesModule()
-	storage = createStorageModule("localhost", "libDB", "libraryDatabase")
-	clientStorage = createBookStorageModule("localhost", "libDB", "libraryDatabase")
+	storage = createStorageModule("localhost", "libDB", "clientAuthDBc")
+	clientStorage = createBookStorageModule("localhost", "libDB", "clientBookDBc")
 }
 
 func createBookStorageModule(host, name, cname string) models.StorageInterface {
-	return main_opt.CreateBookStorageModule(host, name, cname)
+	return main_opt.CreateCustomerBookStorageModule(host, name, cname)
 }
 
 func createPagesModule() *PagesModule {

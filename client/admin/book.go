@@ -1,12 +1,14 @@
 package admin
 
 import (
+	"errors"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 	"lib-client-server/client"
 	"lib-client-server/client/models"
+	"lib-client-server/client/type_getter"
+	"lib-client-server/database"
 	"net/http"
-
-	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +18,7 @@ type Book struct {
 }
 
 func CreateBookModule() client.BookInterface {
-	return &Book{}
+	return &Book{Storage{collection:"adminBookDBc",Database:database.Connect("localhost", "libDB", "libraryDatabase")}}
 }
 
 func (b *Book) GetAll(c *gin.Context) {
@@ -32,9 +34,14 @@ func (b *Book) Create(c *gin.Context) {
 		return
 	}
 
+	if err := b.checkUniq(book); err != nil {
+		fmt.Println("auth.go -> Registration -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "book already exist"})
+		return
+	}
+
 	book.Id = bson.NewObjectId()
 
-	// todo add checking for unique by authorName and bookName and publishYear
 	b.Storage.Set(book)
 
 	c.JSON(http.StatusOK, models.Obj{"result": book})
@@ -75,3 +82,27 @@ func (b *Book) Update(c *gin.Context) {
 func (b *Book) Delete(c *gin.Context) {
 
 } // a:del,u:return
+
+func (b *Book) checkUniq(newBook client.Book) error {
+	record, err := b.GetByQuery(models.Obj{"author":newBook.Author,"name":newBook.Name,"publishYear":newBook.PublishYear})
+	if err != nil {
+		return err
+	}
+
+	book,isIt:=type_getter.GetTypeBook(record)
+
+	switch {
+	case !isIt:
+		return errors.New("smth error")
+	case book == nil:
+		return errors.New("does not exist")
+	case book.Author != newBook.Author:
+		return nil
+	case book.Name != newBook.Name:
+		return nil
+	case book.PublishYear != newBook.PublishYear:
+		return nil
+	default:
+		return errors.New("already not exist")
+	}
+}

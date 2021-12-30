@@ -1,45 +1,59 @@
 package admin
 
 import (
-	main_opt "lib-client-server/client/main"
-	"sync"
+	"errors"
+	"fmt"
+	"gopkg.in/mgo.v2"
+	"lib-client-server/client"
+	"lib-client-server/client/models"
+	"lib-client-server/client/type_getter"
+	"lib-client-server/database"
 
 	"gopkg.in/mgo.v2/bson"
 
-	"lib-client-server/client"
 )
 
-type Storage struct {
-	//KeyType      string
-	//FreeBooksMut sync.RWMutex
-	//FreeBooks    map[bson.ObjectId]client.Book
-}
+type (
+	Storage struct {
+		collection string
+		*mgo.Database
+	}
+)
 
-func createStorage() models.StorageInterface {
-	return &Storage{}
-}
-
-func (s *Storage) Set(data interface{}) {
-	//s.FreeBooksMut.Lock()
-	//s.FreeBooks[data.Id] = data
-	//s.FreeBooksMut.Unlock()
+func CreateConnect(host, name, cname string) models.StorageInterface {
+	return &Storage{collection:cname,Database:database.Connect(host, name, cname)}
 }
 
 func (s *Storage) GetAll() []interface{} {
-	//var result []client.Book
-	//s.FreeBooksMut.RLock()
-	//for _, v := range s.FreeBooks {
-	//	result = append(result, v)
-	//}
-	//s.FreeBooksMut.RUnlock()
-	return nil
+	return []interface{}{}
+}
+
+func (s *Storage) Set(data interface{}) {
+	if book, isIt:=type_getter.GetTypeBook(data); isIt {
+		//todo save to bd
+		if err := s.C(s.collection).Insert(book); err != nil {
+			fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err,book)
+		}
+	}
 }
 
 func (s *Storage) Get(key bson.ObjectId) (interface{}, bool) {
 	return nil, true
 }
 
-func (s *Storage) Update(book client.Book, query ...models.Obj) error {
+func (s *Storage) GetByQuery(query interface{}) (interface{}, error) {
+	if query == nil {
+		return nil, errors.New("NIL QUERY")
+	}
+	var book client.Book
+	if err := s.C(s.collection).Find(query).One(&book); err != nil {
+		fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err,book)
+		return nil, err
+	}
+	return book, nil
+}
+
+func (s *Storage) Update(data interface{}, query ...models.Obj) error {
 	return nil
 }
 
