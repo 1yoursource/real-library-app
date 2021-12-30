@@ -3,13 +3,13 @@ package admin
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
 	"lib-client-server/client"
 	"lib-client-server/client/models"
 	"lib-client-server/client/type_getter"
 	"lib-client-server/database"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,7 +60,7 @@ func (b *Book) Create(c *gin.Context) {
 		return
 	}
 
-	book.Id = bson.NewObjectId()
+	book.Id = fmt.Sprint(time.Now().Unix())
 
 	b.Storage.Set(book)
 

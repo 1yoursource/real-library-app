@@ -52,14 +52,15 @@ func (u *UserModule) GetBook(c *gin.Context) {
 	fmt.Println("sfsefad GetBook 2 ", inputData)
 	user := User{}
 	book := Book{}
-	err := storage.C("users").FindId(bson.ObjectId(inputData.UserId)).One(&user)
+	userId := strings.Split(inputData.UserId, "*")
+	err := storage.C("users").Find(obj{"_id":userId[0]}).One(&user)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
 		return
 	}
 
-	err = storage.C("books").FindId(bson.ObjectId(inputData.BookId)).One(&book)
+	err = storage.C("books").FindId(obj{"_id":inputData.BookId}).One(&book)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> book not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
@@ -75,7 +76,7 @@ func (u *UserModule) GetBook(c *gin.Context) {
 	//сохраняем в базу юзеров изменения.
 	storage.C("users").Update(user.Id, user)
 
-	book.TakenBy = user.TicketNumber
+	book.TakenBy = user.Id+"*lib"
 	book.ReturnDate = time.Now().AddDate(0, 0, 30) // 30 дней с момента взятия книги
 	// сохраняем в базу книг
 	storage.C("books").Update(book.Id, book)

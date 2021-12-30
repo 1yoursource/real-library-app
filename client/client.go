@@ -2,14 +2,12 @@ package client
 
 import (
 	"time"
-
-	"gopkg.in/mgo.v2/bson"
 )
 
 type (
 
 	Book struct {
-		Id          bson.ObjectId `form:"id" bson:"_id"`
+		Id          string `form:"id" bson:"_id"`
 		Name        string        `form:"name" bson:"name"`
 		Author      string        `form:"author" bson:"author"`
 		PublishYear uint64        `form:"publishYear" bson:"publishYear"`
