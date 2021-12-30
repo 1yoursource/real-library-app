@@ -12,3 +12,12 @@ type (
 func CreateCustomerBookStorageModule(host, name, cname string) models.StorageInterface {
 	return customer.CreateConnect(host, name, cname)
 }
+
+//func m_main() {
+//	adminBook := admin.CreateBookModule("localhost", "libDB")
+//}
+
+//storage = createStorageModule("localhost", "libDB", "libraryDatabase")
+func CreateAdminBookModule(host, name, cname string) models.StorageInterface {
+	return customer.CreateConnect(host, name, cname)
+}

@@ -5,8 +5,6 @@ import (
 	"lib-client-server/client/models"
 	"net/http"
 
-	"lib-client-server/client"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +18,7 @@ type (
 	}
 )
 
-func CreateBookModule() client.BookInterface {
+func CreateBookModule() models.BookInterface {
 	return &BookMod{}
 }
 
