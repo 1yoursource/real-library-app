@@ -8,9 +8,6 @@ import (
 	"lib-client-server/client/models"
 	"lib-client-server/client/type_getter"
 	"lib-client-server/database"
-
-	"gopkg.in/mgo.v2/bson"
-
 )
 
 type (
@@ -37,7 +34,7 @@ func (s *Storage) Set(data interface{}) {
 	}
 }
 
-func (s *Storage) Get(key bson.ObjectId) (interface{}, error) {
+func (s *Storage) Get(key uint64) (interface{}, error) {
 	return nil, nil
 }
 
@@ -57,6 +54,6 @@ func (s *Storage) Update(data interface{}, query ...models.Obj) error {
 	return nil
 }
 
-func (s *Storage) Delete(key bson.ObjectId) {
+func (s *Storage) Delete(key uint64) {
 
 }

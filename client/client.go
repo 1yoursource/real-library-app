@@ -7,7 +7,7 @@ import (
 type (
 
 	Book struct {
-		Id          string `form:"id" bson:"_id"`
+		Id          uint64 `form:"id" bson:"_id"`
 		Name        string        `form:"name" bson:"name"`
 		Author      string        `form:"author" bson:"author"`
 		PublishYear uint64        `form:"publishYear" bson:"publishYear"`

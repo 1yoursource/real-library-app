@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
+	"lib-client-server/auto_incrementer"
+	"net/http"
 )
 
 type (
@@ -53,7 +52,7 @@ func (a *AuthModule) Registration(c *gin.Context) {
 
 	fmt.Printf("inputData = %+v\n", inputData)
 
-	var id = fmt.Sprint(time.Now().Unix())
+	var id = auto_incrementer.AI.Next("users")
 
 	if err := user.CreateUser(inputData,id); err != nil {
 		fmt.Println("auth.go -> Registration -> CreateUser: err = ", err)
@@ -97,7 +96,7 @@ func (r *Registration) passwordCompare() bool {
 	return r.Password == r.PasswordSubmit
 }
 
-func (a *AuthModule) Login(c *gin.Context, email string, id string) {
+func (a *AuthModule) Login(c *gin.Context, email string, id uint64) {
 	fmt.Println("login")
 	//setCookie(c, "lib-customer", fmt.Sprint("user", "*lib"))
 	setCookie(c, "lib-login", fmt.Sprint(email, "*lib"))
