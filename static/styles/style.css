@@ -209,18 +209,6 @@ body {
     .pages-view table p {
       padding: 0;
       margin: 0; }
-    .pages-view table tr:first-child {
-      background: #f9fafc; }
-      .pages-view table tr:first-child td {
-        font-size: 12px;
-        font-family: coreEReg;
-        color: #777171;
-        font-weight: 100; }
-        .pages-view table tr:first-child td p {
-          font-size: 12px;
-          font-family: coreEReg;
-          color: #777171;
-          font-weight: 100; }
     .pages-view table tr {
       height: 40px;
       border: solid 1px #ebedf3; }

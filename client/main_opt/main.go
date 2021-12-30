@@ -5,8 +5,7 @@ import (
 	"lib-client-server/client/models"
 )
 
-type (
-)
+type ()
 
 //storage = createStorageModule("localhost", "libDB", "libraryDatabase")
 func CreateCustomerBookStorageModule(host, name, cname string) models.StorageInterface {
@@ -18,6 +17,6 @@ func CreateCustomerBookStorageModule(host, name, cname string) models.StorageInt
 //}
 
 //storage = createStorageModule("localhost", "libDB", "libraryDatabase")
-func CreateAdminBookModule(host, name, cname string) models.StorageInterface {
-	return customer.CreateConnect(host, name, cname)
-}
+//func CreateAdminBookModule(host, name string) models.BookInterface {
+//	return admin.CreateBookModule(host, name)
+//}
