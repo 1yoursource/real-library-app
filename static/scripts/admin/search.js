@@ -4,21 +4,24 @@ function getById(id) {
 
    function book_del(id){
    console.log("del: ", id);
-   //        $.ajax({
-   //            url: '/ajax2/adm/book/edit',
-   //            type: 'POST',
-   //            timeout: 15000,
-   //            error: function(result) {
-   //                console.log(result)
-   //            },
-   //            success: function(result) {
-   //                if (result.error === null) {
-   //
-   //                } else {
-   //                    console.log("ERR")
-   //                }
-   //            },
-   //        });
+           $.ajax({
+               data: {
+                    bookId: id,
+               },
+               url: '/ajax2/adm/book/delete',
+               type: 'POST',
+               timeout: 15000,
+               error: function(result) {
+                   console.log(result)
+               },
+               success: function(result) {
+                   if (result.error === null) {
+
+                   } else {
+                       console.log("ERR")
+                   }
+               },
+           });
        }
 
 $(function() {
