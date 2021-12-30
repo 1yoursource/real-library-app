@@ -64,6 +64,8 @@ func ajax(c *gin.Context) {
 	switch c.Param("module") {
 	case "auth":
 		auth.Ajax(c)
+	case "booking":
+		user.Ajax(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
