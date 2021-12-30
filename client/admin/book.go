@@ -3,6 +3,7 @@ package admin
 import (
 	"errors"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 	"lib-client-server/client"
 	"lib-client-server/client/models"
 	"lib-client-server/client/type_getter"
@@ -31,6 +32,8 @@ func (b *Book) Handler(c *gin.Context) {
 		b.Create(c)
 	case "search":
 		b.GetAll(c)
+	case "delete":
+		b.Delete(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
@@ -101,7 +104,17 @@ func (b *Book) Update(c *gin.Context) {
 } // a:edit,u:
 
 func (b *Book) Delete(c *gin.Context) {
+	var data = struct{
+		BookId bson.ObjectId `form:"bookId"`
+	}{}
 
+	if err := c.Bind(&data); err != nil {
+		fmt.Println("admin book Update -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
+		return
+	}
+
+	b.Storage.Delete(data.BookId)
 } // a:del,u:return
 
 func (b *Book) checkUniq(newBook client.Book) error {
