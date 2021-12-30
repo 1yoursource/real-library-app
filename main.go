@@ -31,7 +31,6 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	r.LoadHTMLGlob("templates/*.html")
-	r.LoadHTMLGlob("templates/admin/*.html")
 	r.Static("/static", "./static")
 
 	CreateModules()
