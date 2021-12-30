@@ -36,6 +36,8 @@ func (u UserModule) Create() *UserModule {
 }
 
 func (u *UserModule) GetBook(c *gin.Context) {
+
+	fmt.Println("sfsefad GetBook ")
 	inputData := struct {
 		UserId string `json:"userId"`
 		BookId string `json:"bookId"`
@@ -46,6 +48,8 @@ func (u *UserModule) GetBook(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
 		return
 	}
+
+	fmt.Println("sfsefad GetBook 2 ", inputData)
 	user := User{}
 	book := Book{}
 	err := storage.C("users").FindId(bson.ObjectId(inputData.UserId)).One(&user)
@@ -203,4 +207,15 @@ func (r *Registration) CheckEmail() error {
 // todo
 func (u *UserModule) BlockUser() {
 
+}
+func (u *UserModule) Ajax(c *gin.Context) {
+	switch c.Param("method") {
+	case "getBook":
+		fmt.Println("sfsefsw ajax")
+		u.GetBook(c)
+	case "returnBook":
+		u.ReturnBook(c)
+	default:
+		c.String(http.StatusBadRequest, "Method not found in module \"PRO<O\"!")
+	}
 }
