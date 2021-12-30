@@ -20,6 +20,7 @@ $(function() {
     $('#searchBookByName').on('click tap',function(){
         console.log("here 1 searchBookByName")
         var bookName = $('#searchBookByNameInput').val();
+
         console.log("here 1 searchBookByName", bookName)
         $.ajax({
             url: '/ajax/booking/searchBookByName',
@@ -33,12 +34,20 @@ $(function() {
                 if (result.error === null) {
                     window.res = result.result
                     for (var i = 0; i<result.result.length; i++) {
+
+                        if (result.result[i].takenBy === getCookie("lib-id")) {
+                            var bookAction = '<a id="user_book_return" >Повернути книгу</a>'
+                        } else if (result.result[i].takenBy === ""){
+                            var bookAction = '<input id="user_book_get" value="result.result[i].id">Взяти книгу</input>'
+                        } else {
+                            var bookAction = '<a id="user_book_absent">Книги немає у наявності</a>'
+                        }
                         console.log(result.result[i]);
                         $("#user_search_table").append('<tr>'+
                             '<td>'+result.result[i].id+'</td>'+
                             '<td>'+result.result[i].name+'</td>'+
                             '<td>'+result.result[i].author+'</td>'+
-                            '<td><a id="adm_book_delete"></a></td>'+
+                            '<td>'+bookAction+'</td>'+
                             '</tr>');
 
                     }
@@ -101,10 +110,10 @@ $(function() {
                     for (var i = 0; i<result.result.length; i++) {
                         console.log(result.result[i]);
                         $("#adm_search_table").append('<tr>'+
-                            '<td>'+result.result[i].Id+'</td>'+
-                            '<td>'+result.result[i].Name+'</td>'+
-                            '<td>'+result.result[i].Author+'</td>'+
-                            '<td><a id="adm_book_delete"></a></td>'+
+                            '<td>'+result.result[i].id+'</td>'+
+                            '<td>'+result.result[i].name+'</td>'+
+                            '<td>'+result.result[i].author+'</td>'+
+                            '<td><a id="adm_book_delete">Повернути книгу</a></td>'+
                             '</tr>');
 
                     }
@@ -114,5 +123,21 @@ $(function() {
             },
         });
     });
-
+    $('#user_book_get').on('click tap',function(){
+        console.log("here 1 user_book_get")
+        var bookId = $('#user_book_get').val();
+        console.log("here 1 searchBookByName", bookId)
+        $.ajax({
+            url: '/ajax/booking/getBook',
+            data: {bookId: bookId, userId: getCookie("lib-id")},
+            type: 'POST',
+            timeout: 15000,
+            error: function(result) {
+                console.log(result)
+            },
+            success: function(result) {
+                console.log("success",result)
+            },
+        });
+    });
 });
