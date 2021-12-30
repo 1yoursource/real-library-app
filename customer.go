@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -33,12 +35,51 @@ func (u UserModule) Create() *UserModule {
 	return &u
 }
 
-func (u *UserModule) GetBook() {
+func (u *UserModule) GetBook(c *gin.Context) {
+	user := User{} // получать юзера
+	book := Book{}
+	if err := c.Bind(&book); err != nil {
+		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
+		return
+	}
+	// смотрим книгу в базе данных, проверяем на занятость
+	if book.TakenBy != "" {
+		c.JSON(http.StatusBadRequest, obj{"error": "Book already taken"})
+		return
+	}
+	// добавляем в список
+	user.Books = append(user.Books, book)
+	//сохраняем в базу юзеров изменения.
+
+	book.TakenBy = user.TicketNumber
+	// сохраняем в базу книг
+
+	c.JSON(http.StatusOK, obj{"answer": "ok"})
 
 }
 
-func (u *UserModule) ReturnBook() {
+func (u *UserModule) ReturnBook(c *gin.Context) {
+	user := User{} // получать юзера
+	book := Book{}
+	if err := c.Bind(&book); err != nil {
+		fmt.Println("customer.go -> ReturnBook -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
+		return
+	}
+	userBooksNew := []Book{}
+	for _, v := range user.Books {
+		if book.Id != v.Id {
+			userBooksNew = append(userBooksNew, v)
+		}
+	}
+	user.Books = userBooksNew
+	// сохраняем в базу юзеров
 
+	book.TakenBy = ""
+	//сохраняем в базу книг
+
+	c.JSON(http.StatusOK, obj{"answer": "ok"})
 }
 
 func (u *UserModule) GetAllTakenBooks() {

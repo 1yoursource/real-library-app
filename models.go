@@ -17,6 +17,7 @@ type (
 		Publisher   string    `json:"publisher" bson:"publisher"`
 		PagesCount  uint64    `json:"pagesCount" bson:"pagesCount"`
 		ReturnDate  time.Time `json:"returnDate" bson:"returnDate"`
+		TakenBy     string    `json:"taken"` // кем взято, если "" - книга доступна для взятия
 	}
 
 	//Test struct {
