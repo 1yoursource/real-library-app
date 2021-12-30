@@ -13,7 +13,7 @@ type (
 	UserModule struct{}
 
 	User struct {
-		Id           string `bson:"_id"`
+		Id           uint64 `bson:"_id"`
 		TicketNumber string        `bson:"ticketNumber"`
 		Email        string        `bson:"email"`
 		Password     []byte        `bson:"password"`
@@ -67,7 +67,7 @@ func (u *UserModule) GetBook(c *gin.Context) {
 		return
 	}
 	// проверяем на занятость
-	if book.TakenBy != "" {
+	if book.TakenBy > 0 {
 		c.JSON(http.StatusBadRequest, obj{"error": "Book already taken"})
 		return
 	}
@@ -76,7 +76,7 @@ func (u *UserModule) GetBook(c *gin.Context) {
 	//сохраняем в базу юзеров изменения.
 	storage.C("users").Update(user.Id, user)
 
-	book.TakenBy = user.Id+"*lib"
+	book.TakenBy = user.Id
 	book.ReturnDate = time.Now().AddDate(0, 0, 30) // 30 дней с момента взятия книги
 	// сохраняем в базу книг
 	storage.C("books").Update(book.Id, book)
@@ -120,7 +120,7 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 	// сохраняем в базу юзеров
 	storage.C("users").Update(user.Id, user)
 
-	book.TakenBy = ""
+	book.TakenBy = 0
 	//сохраняем в базу книг
 	storage.C("books").Update(book.Id, book)
 
@@ -151,7 +151,7 @@ func (u *UserModule) GetAllTakenBooks(c *gin.Context)  {
 
 }
 
-func (u *UserModule) CreateUser(data Registration, id string) error {
+func (u *UserModule) CreateUser(data Registration, id uint64) error {
 	if err := data.CheckEmail(); err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func (u *UserModule) CreateUser(data Registration, id string) error {
 
 	user := User{
 		Id:        id   ,
-		TicketNumber: fmt.Sprint(len(data.LastName), data.Faculty, "-", time.Now().UnixNano()),
+		TicketNumber: fmt.Sprint(id,"-", data.Faculty, "-", time.Now().UnixNano()),
 		FirstName:    data.FirstName,
 		LastName:     data.LastName,
 		SurName:      data.SurName,

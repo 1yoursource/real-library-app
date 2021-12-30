@@ -3,16 +3,14 @@ package admin
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
+	"github.com/gin-gonic/gin"
+	"lib-client-server/auto_incrementer"
 	"lib-client-server/client"
 	"lib-client-server/client/models"
 	"lib-client-server/client/type_getter"
 	"lib-client-server/database"
 	"net/http"
 	"strings"
-	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Book struct {
@@ -49,7 +47,7 @@ func (b *Book) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, models.Obj{"error": nil, "result": books})
 }
 
-func (b *Book) Create(c *gin.Context) {
+func (b *Book) Create(c *gin.Context) { // add book
 	var book = client.Book{}
 	if err := c.Bind(&book); err != nil {
 		fmt.Println("admin book Create -> Bind: err = ", err)
@@ -63,7 +61,7 @@ func (b *Book) Create(c *gin.Context) {
 		return
 	}
 
-	book.Id = fmt.Sprint(time.Now().Unix())
+	book.Id = auto_incrementer.AI.Next(b.Storage.collection)
 	book.TakenBy = ""
 
 	b.Storage.Set(book)
@@ -105,7 +103,7 @@ func (b *Book) Update(c *gin.Context) {
 
 func (b *Book) Delete(c *gin.Context) {
 	var data = struct{
-		BookId bson.ObjectId `form:"bookId"`
+		BookId uint64 `form:"bookId"`
 	}{}
 
 	if err := c.Bind(&data); err != nil {

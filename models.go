@@ -17,10 +17,10 @@ type (
 		Publisher   string    `json:"publisher" bson:"publisher"`
 		PagesCount  uint64    `json:"pagesCount" bson:"pagesCount"`
 		ReturnDate  time.Time `json:"returnDate" bson:"returnDate"`
-		TakenBy     string    `json:"takenBy" bson:"takenBy"` // кем взято, если "" - книга доступна для взятия
+		TakenBy     uint64    `json:"takenBy" bson:"takenBy"` // кем взято, если 0 - книга доступна для взятия
 	}
 	Debtor struct {
-		User  string
+		User  uint64
 		Books []Book
 	}
 	DebtorsList struct {

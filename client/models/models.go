@@ -3,17 +3,16 @@ package models
 import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type(
 	StorageInterface interface {
 		Set(data interface{})
-		Get(key bson.ObjectId) (interface{}, error)
+		Get(key uint64) (interface{}, error)
 		GetByQuery(query interface{}) (interface{}, error)
 		GetAll() *mgo.Query
 		Update(data interface{}, query ...Obj) error
-		Delete(key bson.ObjectId)
+		Delete(key uint64)
 	}
 	BookInterface interface {
 		Handler(c *gin.Context)

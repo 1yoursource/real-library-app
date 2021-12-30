@@ -6,7 +6,7 @@ import (
 )
 
 // запускается каждый день после полуночи
-func FindExpiredBooksByUser(ticketNumber string) []Book {
+func FindExpiredBooksByUser(ticketNumber uint64) []Book {
 	books := []Book{}
 
 	if err := storage.C("books").Find(obj{"takenBy": ticketNumber, "returnDate": obj{"$lte": time.Now().Format(standartDateFmt)}}).All(&books); err != nil {
@@ -28,10 +28,10 @@ func MakeDebtorsList()  {
 	}
 
 	for _, user := range users {
-		books := FindExpiredBooksByUser(user.TicketNumber)
+		books := FindExpiredBooksByUser(user.Id)
 		if len(books)>0 {
 			debtor := Debtor{
-				User:  user.TicketNumber,
+				User:  user.Id,
 				Books: books,
 			}
 			debtors = append(debtors, debtor)
