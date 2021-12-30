@@ -17,9 +17,16 @@ type (
 		Publisher   string    `json:"publisher" bson:"publisher"`
 		PagesCount  uint64    `json:"pagesCount" bson:"pagesCount"`
 		ReturnDate  time.Time `json:"returnDate" bson:"returnDate"`
-		TakenBy     string    `json:"taken"` // кем взято, если "" - книга доступна для взятия
+		TakenBy     string    `json:"takenBy" bson:"takenBy"` // кем взято, если "" - книга доступна для взятия
 	}
-
+	Debtor struct {
+		User  string
+		Books []Book
+	}
+	DebtorsList struct {
+		Date string `json:"date" bson:"date"`
+		Debtors []Debtor
+	}
 	//Test struct {
 	//	Id   uuid.UUID `sql:"id"`
 	//	Name string    `sql:"name"`
@@ -42,6 +49,7 @@ type (
 
 const (
 	standartTimeFmt = "2006-01-02 15:04:05"
+	standartDateFmt = "2006-01-02"
 
 	zero = 0
 	six  = 6
