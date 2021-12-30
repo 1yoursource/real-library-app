@@ -45,7 +45,7 @@ func (u *UserModule) GetAllTakenBooks() {
 
 }
 
-func (u *UserModule) CreateUser(data Registration) error {
+func (u *UserModule) CreateUser(data Registration, id bson.ObjectId) error {
 	if err := data.CheckEmail(); err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (u *UserModule) CreateUser(data Registration) error {
 	}
 
 	user := User{
-		Id:           bson.NewObjectId(),
+		Id:           id,
 		TicketNumber: fmt.Sprint(len(data.LastName), data.Faculty, "-", time.Now().UnixNano()),
 		FirstName:    data.FirstName,
 		LastName:     data.LastName,

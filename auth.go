@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -52,13 +53,15 @@ func (a *AuthModule) Registration(c *gin.Context) {
 
 	fmt.Printf("inputData = %+v\n", inputData)
 
-	if err := user.CreateUser(inputData); err != nil {
+	var id = bson.NewObjectId()
+
+	if err := user.CreateUser(inputData,id); err != nil {
 		fmt.Println("auth.go -> Registration -> CreateUser: err = ", err)
 		c.JSON(http.StatusInternalServerError, obj{"error": err.Error()})
 		return
 	}
 
-	a.Login(c, inputData.Email)
+	a.Login(c, inputData.Email,id)
 }
 
 func (a *AuthModule) Authorization(c *gin.Context) {
@@ -69,35 +72,40 @@ func (a *AuthModule) Authorization(c *gin.Context) {
 		return
 	}
 
-	if err := inputData.checkPassword(); err != nil {
+	var user User
+	if err := storage.C("users").Find(obj{"email": inputData.Login}).One(&user); err != nil {
+		fmt.Println("auth.go -> Authorization -> Find: err = ", err)
+		c.JSON(http.StatusInternalServerError, obj{"error": "not found"})
+		return
+		//return err
+	}
+
+	if err := inputData.checkPassword(user.Password); err != nil {
 		fmt.Println("auth.go -> Authorization -> checkPassword: err = ", err)
 		c.JSON(http.StatusInternalServerError, obj{"error": err.Error()})
 		return
 	}
 
-	a.Login(c, inputData.Login)
+	a.Login(c, inputData.Login, user.Id)
 }
 
-func (ad *AuthData) checkPassword() error {
-	var user User
-	if err := storage.C("users").Find(obj{"email": ad.Login}).One(&user); err != nil {
-		return err
-	}
-
-	return hashedPasswordCompare(ad.Password, user.Password)
+func (ad *AuthData) checkPassword(userPassword []byte) error {
+	return hashedPasswordCompare(ad.Password, userPassword)
 }
 
 func (r *Registration) passwordCompare() bool {
 	return r.Password == r.PasswordSubmit
 }
 
-func (a *AuthModule) Login(c *gin.Context, email string) {
+func (a *AuthModule) Login(c *gin.Context, email string, id bson.ObjectId) {
 	fmt.Println("login")
 	setCookie(c, "lib-login", fmt.Sprint(email, "*lib"))
+	setCookie(c, "lib-id", fmt.Sprint(id, "*lib"))
 	c.JSON(http.StatusOK, obj{"error": nil, "url": "/"})
 }
 
 func (a *AuthModule) Logout(c *gin.Context) {
 	deleteCookie(c, "lib-login")
+	deleteCookie(c, "lib-id")
 	pages.Auth(c)
 }

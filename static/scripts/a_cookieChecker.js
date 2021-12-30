@@ -23,4 +23,8 @@ $(function() {
     if (isLogin.length > 0) {
         window.isLogin = true;
     }
+    var userId = getCookie("lib-id");
+    if (id.length > 0) {
+        window.userId = id;
+    }
 });

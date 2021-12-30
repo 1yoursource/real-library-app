@@ -14,9 +14,17 @@ type (
 )
 
 func (p *PagesModule) Index(c *gin.Context) {
+	var (
+		isLogin = p.checkIsLogin(c)
+	)
 	templateData := gin.H{
-		"notLogin": !p.checkIsLogin(c),
+		"notLogin": !isLogin,
 	}
+
+	if isLogin {
+		templateData["userId"] = p.getUserId(c)
+	}
+
 	c.HTML(http.StatusOK, "index.html", templateData)
 }
 
@@ -63,6 +71,16 @@ func (p *PagesModule) checkIsLogin(c *gin.Context) bool {
 		}
 	}
 	return isLogin
+}
+
+func (p *PagesModule) getUserId(c *gin.Context) string {
+	if cookie, err := getCookie(c, "lib-id"); err == nil {
+		//if p.checkValidEmail(cookie) {
+		// todo add validation 	for correct id
+
+		return strings.Split(cookie, "*")[0]
+	}
+	return ""
 }
 
 func (p *PagesModule) checkValidEmail(email string) bool {
