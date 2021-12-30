@@ -61,6 +61,7 @@ func (b *Book) Create(c *gin.Context) {
 	}
 
 	book.Id = fmt.Sprint(time.Now().Unix())
+	book.TakenBy = ""
 
 	b.Storage.Set(book)
 
