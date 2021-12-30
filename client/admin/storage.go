@@ -24,8 +24,8 @@ func CreateConnect(host, name, cname string) models.StorageInterface {
 	return &Storage{collection:cname,Database:database.Connect(host, name, cname)}
 }
 
-func (s *Storage) GetAll() []interface{} {
-	return []interface{}{}
+func (s *Storage) GetAll() *mgo.Query {
+	return s.C(s.collection).Find(nil)
 }
 
 func (s *Storage) Set(data interface{}) {
@@ -37,8 +37,8 @@ func (s *Storage) Set(data interface{}) {
 	}
 }
 
-func (s *Storage) Get(key bson.ObjectId) (interface{}, bool) {
-	return nil, true
+func (s *Storage) Get(key bson.ObjectId) (interface{}, error) {
+	return nil, nil
 }
 
 func (s *Storage) GetByQuery(query interface{}) (interface{}, error) {
@@ -47,7 +47,7 @@ func (s *Storage) GetByQuery(query interface{}) (interface{}, error) {
 	}
 	var book client.Book
 	if err := s.C(s.collection).Find(query).One(&book); err != nil {
-		fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err,book)
+		fmt.Printf("bookStorage GetByQuery Find error = %s; data = %+v\n", err,book)
 		return nil, err
 	}
 	return book, nil

@@ -31,6 +31,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	r.LoadHTMLGlob("templates/*.html")
+	r.LoadHTMLGlob("templates/admin/*.html")
 	r.Static("/static", "./static")
 
 	CreateModules()
@@ -43,13 +44,9 @@ func main() {
 	r.GET("/logout", auth.Logout)
 	r.GET("/auth", pages.Auth)
 	r.POST("/ajax/:module/:method", ajax)
-	rGroup := r.Group("/api/v1")
 
-	rGroup.Group("/ajax/")
-	//rGroup.GET("/books/set", handlerModule.CreateItem)
-	//rGroup.GET("/books/get/by/user/:userId", handlerModule.GetBooksByUser)
-	//rGroup.GET("/books/get/by/author/:authorName", handlerModule.GetBooksByAuthor)
-	//rGroup.GET("/readers/get/expired", handlerModule.GetReadersWithExpiredBookTerm)
+	r.POST("/ajax2/:customer/:module/:method", ajax2)
+	r.GET("/adm/:page", adminPages.Handler)
 
 	fmt.Println("Application started on port 2200")
 
@@ -64,6 +61,35 @@ func ajax(c *gin.Context) {
 	switch c.Param("module") {
 	case "auth":
 		auth.Ajax(c)
+	default:
+		c.String(http.StatusBadRequest, "Module not found!")
+	}
+}
+func ajax2(c *gin.Context) {
+	c.Header("Expires", time.Now().String())
+	c.Header("Cache-Control", "no-cache")
+	switch c.Param("customer") {
+	case "adm":
+		adm(c)
+	case "user":
+		usr(c)
+	default:
+		c.String(http.StatusBadRequest, "restricted")
+	}
+}
+
+func adm(c *gin.Context) {
+	switch c.Param("module") {
+	case "book":
+		adminBooks.Handler(c)
+	default:
+		c.String(http.StatusBadRequest, "Module not found!")
+	}
+}
+
+func usr(c *gin.Context) {
+	switch c.Param("module") {
+	case "book":
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}

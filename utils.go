@@ -82,3 +82,18 @@ func GetRand(count float64) int {
 	rand.Seed(time.Now().UnixNano())
 	return int(rand.Float64() * count)
 }
+
+//
+/*
+
+	clientStorage.Get(bson.NewObjectId())
+	data, err := clientStorage.GetByQuery(models.Obj{}) // коллекция книг
+	if err != nil {
+		fmt.Println("err")
+		return
+	}
+	book, isIt:=type_getter.GetTypeBook(data)
+	if !isIt {
+		return
+	}
+*/
