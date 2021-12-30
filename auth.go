@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -53,7 +53,7 @@ func (a *AuthModule) Registration(c *gin.Context) {
 
 	fmt.Printf("inputData = %+v\n", inputData)
 
-	var id = bson.NewObjectId()
+	var id = fmt.Sprint(time.Now().Unix())
 
 	if err := user.CreateUser(inputData,id); err != nil {
 		fmt.Println("auth.go -> Registration -> CreateUser: err = ", err)
@@ -97,7 +97,7 @@ func (r *Registration) passwordCompare() bool {
 	return r.Password == r.PasswordSubmit
 }
 
-func (a *AuthModule) Login(c *gin.Context, email string, id bson.ObjectId) {
+func (a *AuthModule) Login(c *gin.Context, email string, id string) {
 	fmt.Println("login")
 	//setCookie(c, "lib-customer", fmt.Sprint("user", "*lib"))
 	setCookie(c, "lib-login", fmt.Sprint(email, "*lib"))

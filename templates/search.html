@@ -172,7 +172,6 @@
       <div class="col-md-12">
         <div class="container-fluid">
           <div class="form-header title-feedback">
-            <h2>Номер ковід-паспорту</h2>
           </div>
           <form action="/" method="POST" id="search-el-form" class="row gutters10 form-feedback">
             <div class="col-md-6 feedback-left-block">
@@ -180,7 +179,10 @@
                 <input type="type" name="input_search" id="input_search" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
               </div>	
               <div class="btn-wrap">
-                <a id="searchBtn" data-name="Пошук" title="Пошук" class="btn-wrap__footer button" href="#"><span>Пошук</span></a>
+                <a id="searchBookByName" data-name="searchBtnByName" title="Пошук" class="btn-wrap__footer button" href="#"><span>Назва книги</span></a>
+                <a id="searchBookByAuthor" data-name="searchBtnByAuthor" title="Пошук" class="btn-wrap__footer button" href="#"><span>Автор</span></a>
+                  <br>
+                  <a id="getAllUsersBooks" data-name="getAllUsersBooks" title="Пошук" class="btn-wrap__footer button" href="#"><span>Мої книги</span></a>
               </div>				
             </div>
           </form>
@@ -188,15 +190,15 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">BookID</th>
+                  <th scope="col">Author</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>1</td>
+                  <td></td>
                   <td>Mark</td>
                   <td>Otto</td>
                   <td>@mdo</td>
@@ -267,5 +269,8 @@
       <script src="../static/scripts/app.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+          <script src="../static/scripts/a_cookieChecker.js"></script>
+          <script src="../static/scripts/booking.js"></script>
+
   </body>
   </html>

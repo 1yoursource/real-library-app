@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
-
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
+	"strings"
+	"time"
 )
 
 type (
 	UserModule struct{}
 
 	User struct {
-		Id           bson.ObjectId `bson:"_id"`
+		Id           string `bson:"_id"`
 		TicketNumber string        `bson:"ticketNumber"`
 		Email        string        `bson:"email"`
 		Password     []byte        `bson:"password"`
@@ -39,8 +39,8 @@ func (u *UserModule) GetBook(c *gin.Context) {
 
 	fmt.Println("sfsefad GetBook ")
 	inputData := struct {
-		UserId string `json:"userId"`
-		BookId string `json:"bookId"`
+		UserId string `form:"userId"`
+		BookId string `form:"bookId"`
 	}{}
 
 	if err := c.Bind(&inputData); err != nil {
@@ -86,8 +86,8 @@ func (u *UserModule) GetBook(c *gin.Context) {
 
 func (u *UserModule) ReturnBook(c *gin.Context) {
 	inputData := struct {
-		UserId string `json:"userId"`
-		BookId string `json:"bookId"`
+		UserId string `form:"userId"`
+		BookId string `form:"bookId"`
 	}{}
 	if err := c.Bind(&inputData); err != nil {
 		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
@@ -127,32 +127,34 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 }
 
 // получить список книг у читателя
-func (u *UserModule) GetAllTakenBooks(c *gin.Context) {
-	inputData := struct {
-		UserId string `json:"userId"`
-	}{}
-	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("customer.go -> GetAllTakenBooks -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
+func (u *UserModule) GetAllTakenBooks(c *gin.Context)  {
+	userId, err := c.Cookie("lib-id")
+	if err != nil {
+		fmt.Println("errrrrrrrooooorrrrr ")
 		return
 	}
+	fmt.Println("userId str ",userId)
+	userIdSlice := strings.Split(userId,"*")
+	userId = userIdSlice[0]
+	fmt.Println("userId str 2",userId)
 	user := User{}
-	err := storage.C("users").FindId(bson.ObjectId(inputData.UserId)).One(&user)
+	err = storage.C("users").Find(obj{"_id":userId}).One(&user)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
 		return
 	}
-	booksList := []string{}
-	for _, book := range user.Books {
-		// записываем список книг с авторами, которые на руках у данного пользователя
-		booksList = append(booksList, book.Name+", "+book.Author)
-	}
+	//booksList := []string{}
+	//for _, book := range user.Books {
+	//	// записываем список книг с авторами, которые на руках у данного пользователя
+	//	booksList = append(booksList, book.Name+", "+book.Author)
+	//}
 
-	c.JSON(http.StatusOK, obj{"books": booksList})
+	c.JSON(http.StatusOK, obj{"books": user.Books})
+
 }
 
-func (u *UserModule) CreateUser(data Registration, id bson.ObjectId) error {
+func (u *UserModule) CreateUser(data Registration, id string) error {
 	if err := data.CheckEmail(); err != nil {
 		return err
 	}
@@ -215,6 +217,12 @@ func (u *UserModule) Ajax(c *gin.Context) {
 		u.GetBook(c)
 	case "returnBook":
 		u.ReturnBook(c)
+	case "getAllTakenBooks":
+		u.GetAllTakenBooks(c)
+	//case "searchBookByName":
+	//	u.(c)
+	//case "searchBookByAuthor":
+	//	u.(c)
 	default:
 		c.String(http.StatusBadRequest, "Method not found in module \"PRO<O\"!")
 	}

@@ -29,9 +29,13 @@ func (p *PagesModule) Index(c *gin.Context) {
 }
 
 func (p *PagesModule) Search(c *gin.Context) {
+	fmt.Println("sees search!!")
 	templateData := gin.H{
 		"notLogin": !p.checkIsLogin(c),
 	}
+	fmt.Println("sees 2 search!!", p.checkIsLogin(c))
+	//user.GetAllTakenBooks(c)
+	fmt.Println("sees 3 search!!")
 	c.HTML(http.StatusOK, "search.html", templateData)
 }
 
