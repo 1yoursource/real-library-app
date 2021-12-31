@@ -1,10 +1,8 @@
 package customer
 
 import (
-	"errors"
 	"fmt"
 	"gopkg.in/mgo.v2"
-	"lib-client-server/client"
 	"lib-client-server/client/models"
 	"lib-client-server/client/type_getter"
 	"lib-client-server/database"
@@ -34,16 +32,8 @@ func (s *Storage) Set(data interface{}) {
 	}
 }
 
-func (s *Storage) GetByQuery(query interface{}) (interface{}, error) {
-	if query == nil {
-		return nil, errors.New("NIL QUERY")
-	}
-	var book client.Book
-	if err := s.C(s.collection).Find(query).One(&book); err != nil {
-		fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err, book)
-		return nil, err
-	}
-	return book, nil
+func (s *Storage) GetByQuery(query interface{}) *mgo.Query {
+	return s.C(s.collection).Find(query)
 }
 
 func (s *Storage) Get(key uint64) (interface{}, error) {
@@ -54,6 +44,6 @@ func (s *Storage) Update(data interface{}, query ...models.Obj) error {
 	return nil
 }
 
-func (s *Storage) Delete(key uint64) {
-
+func (s *Storage) Delete(key uint64) error {
+	return nil
 }

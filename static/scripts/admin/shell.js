@@ -20,6 +20,7 @@ $(function() {
                 console.log("r: ",result)
                     if (result.error === null) {
                         console.log("res:", result)
+                        window.location.reload();
                     } else {
                         console.log("eeeeeeeerr")
                     }
