@@ -9,6 +9,7 @@ import (
 	"lib-client-server/database"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Book struct {
@@ -30,6 +31,8 @@ func (b *Book) Handler(c *gin.Context) {
 		b.GetAll(c)
 	case "delete":
 		b.Delete(c)
+	case "dept":
+		b.GetDept(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
@@ -60,7 +63,6 @@ func (b *Book) GetAll(c *gin.Context) {
 		err = b.Storage.GetByQuery(models.Obj{"author": input.Value}).All(&books)
 	case "3": // все книги пользователя
 		err = b.Storage.GetByQuery(models.Obj{"takenBy": input.Value}).All(&books)
-	case "4": // должники
 	default:
 		c.JSON(http.StatusBadRequest, models.Obj{"error": "unknown filter", "result": []models.Book{}})
 		return
@@ -135,6 +137,54 @@ func (b *Book) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.Obj{"error": err, "result": data.BookId})
 } // a:del,u:return
+
+func (b *Book) GetDept(c *gin.Context) {
+	var data = struct {
+		Filter string `form:"filter"`
+	}{}
+
+	if err := c.Bind(&data); err != nil {
+		fmt.Println("admin book Update -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
+		return
+	}
+
+	var books []models.Book
+	if err := b.Storage.GetByQuery(models.Obj{"takenBy":models.Obj{"$ne":""}}).All(&books); err != nil {
+		fmt.Println("admin book Update -> Bind: err = ", err)
+		if strings.Contains(err.Error(),"not found") {
+			c.JSON(http.StatusOK,models.Obj{"error":nil,"result":nil})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
+		return
+	}
+
+	var depts []models.Dept
+	switch data.Filter {
+	case "1":
+		for _, v := range books {
+			if v.ReturnDate.Before(time.Now()) {
+				continue
+			}
+			depts = append(depts, models.Dept{
+				Book: fmt.Sprint(v.Author," ",v.Name),
+				ReturnDate: fmt.Sprint(v.ReturnDate),
+				TicketNumber: v.TakenBy,
+			})
+		}
+	case "2":
+		for _, v := range books {
+			depts = append(depts, models.Dept{
+				Book: fmt.Sprint(v.Author," ",v.Name),
+				ReturnDate: fmt.Sprint(v.ReturnDate),
+				TicketNumber: v.TakenBy,
+			})
+		}
+	}
+
+	c.JSON(http.StatusOK, models.Obj{"error": nil, "result": depts})
+}
 
 func (b *Book) checkUniq(newBook models.Book) error {
 	var book models.Book

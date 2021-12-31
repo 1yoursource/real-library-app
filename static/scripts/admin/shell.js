@@ -28,4 +28,54 @@ $(function() {
             });
         });
 
+    $('#admShellSearchBtn').on('click tap',function(){
+        var filterId = $('#search_filter').val();
+        searchShell(filterId)
+    });
+
 });
+
+   function searchShell(filterId){
+       $.ajax({
+           data: {
+               filter: filterId,
+           },
+           url: '/ajax2/adm/user/dept',
+           type: 'POST',
+           timeout: 15000,
+           error: function(result) {
+               console.log(result)
+           },
+           success: function(result) {
+               if (result.error === null) {
+                   if (result.result == null || result.result.length == 0) {
+                       return
+                   }
+               $("#adm_dept_table td").parent().remove();
+                   switch (filterId) {
+                       case "1":
+                           makeTableResultShell(result.result);
+                           break;
+                       case "2":
+                           makeTableResultShell(result.result);
+                           break;
+                   }
+               } else {
+                   console.log("eeeeeeeerr")
+               }
+           },
+       });
+   }
+
+    function makeTableResultShell(result) {
+        if (result.length == 0) {
+            return
+        }
+        for (var i = 0; i<result.length; i++) {
+            $("#adm_dept_table").append('<tr class="table-row-'+result[i].Id+'">'+
+            '<td>'+result[i].ticketNumber+'</td>'+
+            '<td>'+result[i].book+'</td>'+
+            '<td>'+result[i].returnDate+'</td>'+
+            '</tr>');
+        }
+    }

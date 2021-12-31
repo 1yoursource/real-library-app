@@ -84,6 +84,8 @@ func adm(c *gin.Context) {
 	switch c.Param("module") {
 	case "book":
 		adminBooks.Handler(c)
+	case "user":
+		adminBooks.Handler(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}

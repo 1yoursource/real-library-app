@@ -36,11 +36,11 @@ func GetCookie(c *gin.Context, name string) (string, error) {
 	}
 
 	if len(data) == 0 {
-		return "", errors.New("")
+		return "", errors.New("empty data")
 	}
 
-	if !strings.Contains(data, "lib") {
-		return "", errors.New("")
+	if name != "lib-id" && !strings.Contains(data, "lib") {
+		return "", errors.New("bad cookies")
 	}
 
 	return strings.Split(data, "*")[0], nil // при обращении к [0] никогда не паникнёт, из-за проверки выше (пример куки - abrakadabra18@gmail.com*lib)

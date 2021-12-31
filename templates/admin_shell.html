@@ -172,8 +172,7 @@
             <div class="col-md-12">
                 <nav class="nav nav-pills flex-column flex-sm-row">
                     <a class="flex-sm-fill text-sm-center nav-link active show" id="home-tab" data-toggle="tab" href="#dapps" role="tab" aria-controls="dapps" aria-selected="true">Додати книгу</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="profile-tab" data-toggle="tab" href="#explorer" role="tab" aria-controls="explorer" aria-selected="false">Документи</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="contact-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">Паспорт</a>
+                    <a class="flex-sm-fill text-sm-center nav-link" id="profile-tab" data-toggle="tab" href="#explorer" role="tab" aria-controls="explorer" aria-selected="false">Читачі</a>
                 </nav>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="dapps" role="tabpanel" aria-labelledby="home-tab">
@@ -211,86 +210,44 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="explorer" role="tabpanel" aria-labelledby="profile-tab">
-                        <div class="container">
+                        <div class="container-position-left">
                             <div class="title-feedback">
-                                <h2>Документи</h2>
+                                <h2>Взяті книги</h2>
                             </div>
-                            <div class="card">
-                                <a href="https://neotube.io/#network=mainnet" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/neotube.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">Neo MainNet/TestNet Explorer created by NeoNEXT.</p>
+                            <div class="row gutters10 pages-view">
+                                <div class="col-md-12">
+                                    <div class="container-fluid">
+                                        <form action="/" method="POST" id="search-el-form" class="row gutters10 form-feedback">
+                                            <div class="col-md-6 feedback-left-block">
+                                                <div class="form-group">
+                                                    <select name="search_filter" id="search_filter">
+                                                        <option value="1" selected>Читачі які мають повернути книги</option>
+                                                        <option value="2">Читачі які взяли книги</option>
+                                                    </select>
+                                                </div>
+                                                <div class="btn-wrap">
+                                                    <a id="admShellSearchBtn" data-name="Пошук" title="Пошук" class="btn-wrap__footer button" href="#"><span>Пошук</span></a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="row search-item">
+                                            <table class="table table-bordered" id="adm_dept_table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Читацький квиток</th>
+                                                    <th scope="col">Книга</th>
+                                                    <th scope="col">Дата повернення</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://neoscan.io/" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/neoscan.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">Neo Mainnet Explorer created by CoZ.</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://neotracker.io/" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/neotracker.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">MainNet and TestNet explorer, created by the Neo Tracker team.</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://neoexplorer.co/" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/neoexplorer.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">New but very stable explorer, launched in August 2017.</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://scan.nel.group/#mainnet" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/nel.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">Neo Mainnet Explorer created by NEL.</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://cbc.ilink.network/neo-blockchain-explorer" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/ilink_neo_explorer.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">Explorer and search created by iLINK Network</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <a href="https://neo.tokenview.com/" target="_blank">
-                                    <img class="card-img-top" data-original="images/explorer/tokenview.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC">
-                                </a>
-                                <div class="card-body">
-                                    <p class="card-text">A blockchain explorer with rich charts</p>
-                                </div>
-                            </div>
-                            <div class="btn-wrap text-center">
-                                <a id="addDocumentBtn" data-name="Додати документ" title="Додати документ" class="btn-wrap__footer button" href="#"><span>Додати документ</span></a>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="profile-tab">
-                        <div class="container">
-                            <div class="title-feedback">
-                                <h2>Паспорт</h2>
-                            </div>
-                            <img src="http://placehold.it/500x400" class="img-fluid" alt="">
-                            <div class="passport-data">
-                                <p>Дані:</p>
-                            </div>
-                            <div class="btn-wrap text-center">
-                                <a id="addPassportBtn" data-name="Додати документ" title="Додати документ" class="btn-wrap__footer button" href="#"><span>Додати документ</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </div>                </div>
             </div>
         </div>
     </div>

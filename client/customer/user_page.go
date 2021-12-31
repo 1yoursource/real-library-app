@@ -3,8 +3,10 @@ package customer
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/night-codes/types.v1"
 	"lib-client-server/client/helper"
 	"lib-client-server/client/models"
+	"lib-client-server/database"
 	"net/http"
 	"strings"
 )
@@ -64,21 +66,43 @@ func (p *PagesModule) Search(c *gin.Context) {
 
 func (p *PagesModule) About(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "about.html"), templateData)
 }
 
 func (p *PagesModule) Shell(c *gin.Context) {
+	var isLogin = p.checkIsLogin(c)
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": isLogin,
 	}
+
+	if isLogin {
+		fmt.Println("isLogin: ", isLogin)
+		// отримуємо користувача
+		if idStr, err := getCookie(c, "lib-id"); err == nil {
+			var user models.User
+			if err := database.Connect("localhost",
+				"libDB",
+				"libraryDatabase",
+				).C("users").FindId(types.Uint64(idStr)).One(&user); err == nil {
+				if user.Id != 0 {
+					templateData["user"] = user
+				} else {
+					isLogin = false
+				}
+			}
+		}
+	}
+
+	fmt.Println("aaaaaaaaaaa: ", templateData["user"])
+
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "shell.html"), templateData)
 }
 
 func (p *PagesModule) Auth(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "registration.html"), templateData)
 }
