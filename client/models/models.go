@@ -9,10 +9,10 @@ type(
 	StorageInterface interface {
 		Set(data interface{})
 		Get(key uint64) (interface{}, error)
-		GetByQuery(query interface{}) (interface{}, error)
+		GetByQuery(query interface{}) *mgo.Query
 		GetAll() *mgo.Query
 		Update(data interface{}, query ...Obj) error
-		Delete(key uint64)
+		Delete(key uint64) error
 	}
 	BookInterface interface {
 		Handler(c *gin.Context)
