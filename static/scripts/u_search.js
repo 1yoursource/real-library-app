@@ -4,7 +4,7 @@ function getById(id) {
 
 $(function() {
 
-    $('#searchBtn').on('click tap',function(){
+    $('#usrSearchBtn').on('click tap',function(){
         console.log("f-",$('#search_filter').val())
         var filterId = $('#search_filter').val();
         var filterVal = $('#input_search').val();

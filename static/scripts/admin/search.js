@@ -4,7 +4,7 @@ function getById(id) {
 
 $(function() {
 
-    $('#searchBtn').on('click tap',function(){
+    $('#admSearchBtn').on('click tap',function(){
         console.log("f-",$('#search_filter').val())
         var filterId = $('#search_filter').val();
         var filterVal = $('#input_search').val();
@@ -73,7 +73,7 @@ $(function() {
        }
 
     function makeTableResult(result) {
-        if (result == null || result.length == 0) {
+        if (result.length == 0) {
             return
         }
         for (var i = 0; i<result.length; i++) {
