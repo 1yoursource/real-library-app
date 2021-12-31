@@ -28,7 +28,7 @@ $(function() {
                },
                success: function(result) {
                    if (result.error === null) {
-                        $("#adm_search_table tr").remove('.table-row-'+id);
+                        $("#user_search_table tr").remove('.table-row-'+id);
                    } else {
                        console.log("ERR")
                    }

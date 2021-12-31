@@ -40,14 +40,14 @@ type (
 	}
 
 	Book struct {
-		Id          uint64    `form:"id" json:"id" bson:"_id"`
-		Name        string    `form:"name" json:"name" bson:"name"`
-		Author      string    `form:"author" json:"author" bson:"author"`
-		PublishYear uint64    `form:"publishYear" json:"publishYear" bson:"publishYear"`
-		Publisher   string    `form:"publisher" json:"publisher" bson:"publisher"`
-		PagesCount  uint64    `form:"pagesCount" json:"pagesCount" bson:"pagesCount"`
-		ReturnDate  time.Time `form:"returnDate" json:"returnDate" bson:"returnDate"`
-		TakenBy     string    `form:"takenBy" json:"takenBy" bson:"takenBy"` // кем взято, если 0 - книга доступна для взятия
+		Id          uint64 `form:"id" bson:"_id"`
+		Name        string        `form:"name" bson:"name"`
+		Author      string        `form:"author" bson:"author"`
+		PublishYear uint64        `form:"publishYear" bson:"publishYear"`
+		Publisher   string        `form:"publisher" bson:"publisher"`
+		PagesCount  uint64        `form:"pagesCount" bson:"pagesCount"`
+		ReturnDate  time.Time     `form:"returnDate" bson:"returnDate"`
+		TakenBy     string    `json:"takenBy" bson:"takenBy"` // кем взято, если "" - книга доступна для взятия
 	}
 )
 

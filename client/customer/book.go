@@ -60,10 +60,12 @@ func (b *Book) GetAll(c *gin.Context) {
 	case "3": // за автором
 		err = b.Storage.GetByQuery(models.Obj{"author": input.Value}).All(&books)
 	case "4": // усі взяті користувачем книги
-		fmt.Println("Aaaaaaaaaaaaaaaaaaaaaaaaa",input)
 		books, err  = b.getAllUserBooks(types.Uint64(input.Value))
 	case "5": // взяті користувачем книги, які підлягають поверненню
+		fmt.Println("Aaaaaaaaaaaaaaaaaaaaaaaaa",input)
 		books, err  = b.getUserBooksForReturning(types.Uint64(input.Value))
+		fmt.Println(err)
+		fmt.Println(books)
 	default:
 		c.JSON(http.StatusBadRequest, models.Obj{"error": "unknown filter", "result": []models.Book{}})
 		return
@@ -121,35 +123,9 @@ func (b *Book) Create(c *gin.Context) { // користувач бере кни�
 	c.JSON(http.StatusOK, models.Obj{"error": nil, "result": data.BookId})
 } // a:cr,u:get
 
-func (b *Book) Read(c *gin.Context) {
-	var book = models.Book{}
-	if err := c.Bind(&book); err != nil {
-		fmt.Println("usr book Read -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
-		return
-	}
+func (b *Book) Read(c *gin.Context) {} // a:see,u:see info //todo NEED ?????
 
-	//book, exist := b.Storage.Get(book.Id)
-	//if !exist {
-	//	c.JSON(http.StatusInternalServerError, models.Obj{"error": "not found"})
-	//	return
-	//}
-	c.JSON(http.StatusOK, models.Obj{"result": book})
-
-} // a:see,u:see info //todo NEED ?????
-
-func (b *Book) Update(c *gin.Context) { // todo unused
-	var book = models.Book{}
-	if err := c.Bind(&book); err != nil {
-		fmt.Println("usr book Update -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
-		return
-	}
-
-	// todo ???
-	// add checking for new data in struct => by marshaling and compare 2 string
-
-} // a:edit,u:
+func (b *Book) Update(c *gin.Context) {} // a:edit,u:
 
 func (b *Book) Delete(c *gin.Context) {
 	var data = struct {
@@ -174,8 +150,23 @@ func (b *Book) Delete(c *gin.Context) {
 		return
 	}
 
+	var user models.User
+	if err := b.Storage.C("users").FindId(data.UserId).One(&user); err != nil {
+		fmt.Println("usr book Create -> Update: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": err})
+		return
+	}
+
+	var books []models.Book
+	for _,v:=range user.Books {
+		if v.Id == data.BookId {
+			continue
+		}
+		books = append(books,v)
+	}
+
 	selector = models.Obj{"_id": data.UserId}
-	updater = models.Obj{"$pull": models.Obj{"books": fmt.Sprint(data.BookId)}}
+	updater = models.Obj{"$set": models.Obj{"books": books}}
 
 	if err := b.Storage.C("users").Update(selector, updater); err != nil {
 		fmt.Println("usr book Create -> users.Update: err = ", err)
@@ -208,8 +199,6 @@ func (b *Book) getAllUserBooks(userId uint64) ([]models.Book, error) {
 	if err := b.Storage.C("users").FindId(userId).One(&user); err != nil {
 		return []models.Book{}, err
 	}
-
-	fmt.Println()
 
 	return user.Books, nil
 }
