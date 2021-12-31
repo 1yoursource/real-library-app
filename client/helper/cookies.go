@@ -18,7 +18,7 @@ const (
 
 	zero = 0
 	six  = 6
-	)
+)
 
 // createHashPassword - создает хэшированный пароль
 func CreateHashPassword(password string) ([]byte, error) {

@@ -16,7 +16,7 @@ type (
 )
 
 func CreateConnect(host, name, cname string) models.StorageInterface {
-	return &Storage{collection:cname,Database:database.Connect(host, name, cname)}
+	return &Storage{collection: cname, Database: database.Connect(host, name, cname)}
 }
 
 func (s *Storage) GetAll() *mgo.Query {
@@ -24,10 +24,10 @@ func (s *Storage) GetAll() *mgo.Query {
 }
 
 func (s *Storage) Set(data interface{}) {
-	if book, isIt:=type_getter.GetTypeBook(data); isIt {
+	if book, isIt := type_getter.GetTypeBook(data); isIt {
 		//todo save to bd
 		if err := s.C(s.collection).Insert(book); err != nil {
-			fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err,book)
+			fmt.Printf("bookStorage Insert error = %s; data = %+v\n", err, book)
 		}
 	}
 }

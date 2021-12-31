@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
+	"lib-client-server/client/models"
 	"net/http"
 	"strings"
 	"time"
@@ -11,19 +12,6 @@ import (
 
 type (
 	UserModule struct{}
-
-	User struct {
-		Id           uint64 `bson:"_id"`
-		TicketNumber string        `bson:"ticketNumber"`
-		Email        string        `bson:"email"`
-		Password     []byte        `bson:"password"`
-		FirstName    string        `bson:"firstName"`
-		LastName     string        `bson:"lastName"`
-		SurName      string        `bson:"surName"`
-		Faculty      string        `bson:"faculty"`
-		LastLogin    string        `bson:"lastLogin"`
-		Books        []Book        `bson:"books"`
-	}
 
 	AuthData struct {
 		Login    string `form:"login" bson:"login"`
@@ -50,24 +38,24 @@ func (u *UserModule) GetBook(c *gin.Context) {
 	}
 
 	fmt.Println("sfsefad GetBook 2 ", inputData)
-	user := User{}
-	book := Book{}
+	user := models.User{}
+	book := models.Book{}
 	userId := strings.Split(inputData.UserId, "*")
-	err := storage.C("users").Find(obj{"_id":userId[0]}).One(&user)
+	err := storage.C("users").Find(obj{"_id": userId[0]}).One(&user)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
 		return
 	}
 
-	err = storage.C("books").FindId(obj{"_id":inputData.BookId}).One(&book)
+	err = storage.C("books").FindId(obj{"_id": inputData.BookId}).One(&book)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> book not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
 		return
 	}
 	// проверяем на занятость
-	if book.TakenBy > 0 {
+	if len(book.TakenBy) > 0 {
 		c.JSON(http.StatusBadRequest, obj{"error": "Book already taken"})
 		return
 	}
@@ -76,7 +64,7 @@ func (u *UserModule) GetBook(c *gin.Context) {
 	//сохраняем в базу юзеров изменения.
 	storage.C("users").Update(user.Id, user)
 
-	book.TakenBy = user.Id
+	book.TakenBy = fmt.Sprint(user.Id)
 	book.ReturnDate = time.Now().AddDate(0, 0, 30) // 30 дней с момента взятия книги
 	// сохраняем в базу книг
 	storage.C("books").Update(book.Id, book)
@@ -96,8 +84,8 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 		return
 	}
 
-	user := User{}
-	book := Book{}
+	user := models.User{}
+	book := models.Book{}
 	err := storage.C("users").FindId(bson.ObjectId(inputData.UserId)).One(&user)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
@@ -110,7 +98,7 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
 		return
 	}
-	userBooksNew := []Book{}
+	userBooksNew := []models.Book{}
 	for _, v := range user.Books {
 		if book.Id != v.Id {
 			userBooksNew = append(userBooksNew, v)
@@ -120,7 +108,7 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 	// сохраняем в базу юзеров
 	storage.C("users").Update(user.Id, user)
 
-	book.TakenBy = 0
+	book.TakenBy = ""
 	//сохраняем в базу книг
 	storage.C("books").Update(book.Id, book)
 
@@ -128,24 +116,23 @@ func (u *UserModule) ReturnBook(c *gin.Context) {
 }
 
 // получить список книг у читателя
-func (u *UserModule) GetAllTakenBooks(c *gin.Context)  {
+func (u *UserModule) GetAllTakenBooks(c *gin.Context) {
 	userId, err := c.Cookie("lib-id")
 	if err != nil {
 		fmt.Println("errrrrrrrooooorrrrr ")
 		return
 	}
-	fmt.Println("userId str ",userId)
-	userIdSlice := strings.Split(userId,"*")
+	fmt.Println("userId str ", userId)
+	userIdSlice := strings.Split(userId, "*")
 	userId = userIdSlice[0]
-	fmt.Println("userId str 2",userId)
-	user := User{}
-	err = storage.C("users").Find(obj{"_id":userId}).One(&user)
+	fmt.Println("userId str 2", userId)
+	user := models.User{}
+	err = storage.C("users").Find(obj{"_id": userId}).One(&user)
 	if err != nil {
 		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
 		return
 	}
-
 
 	c.JSON(http.StatusOK, obj{"books": user.Books})
 
@@ -161,9 +148,9 @@ func (u *UserModule) CreateUser(data Registration, id uint64) error {
 		return err
 	}
 
-	user := User{
-		Id:        id   ,
-		TicketNumber: fmt.Sprint(id,"-", data.Faculty, "-", time.Now().UnixNano()),
+	user := models.User{
+		Id:           id,
+		TicketNumber: fmt.Sprint(id, "-", data.Faculty, "-", time.Now().Unix()),
 		FirstName:    data.FirstName,
 		LastName:     data.LastName,
 		SurName:      data.SurName,
@@ -208,7 +195,7 @@ func (u *UserModule) BlockUser() {
 
 }
 
-func (u *UserModule) SearchBookByTitle(c *gin.Context)  {
+func (u *UserModule) SearchBookByTitle(c *gin.Context) {
 	inputData := struct {
 		BookName string `form:"bookName"`
 	}{}
@@ -219,17 +206,17 @@ func (u *UserModule) SearchBookByTitle(c *gin.Context)  {
 	}
 	fmt.Println("here 1 searchBookByName", inputData)
 
-	books := []Book{}
-	err := storage.C("books").Find(obj{"name":inputData.BookName}).All(&books)
+	books := []models.Book{}
+	err := storage.C("books").Find(obj{"name": inputData.BookName}).All(&books)
 	if err != nil {
 		fmt.Println("customer.go -> SearchBookByTitle -> books not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
 		return
 	}
 	fmt.Println("sfsfsefeef SearchBookByTitle", books)
-	c.JSON(http.StatusOK, obj{"error":nil, "result":books})
+	c.JSON(http.StatusOK, obj{"error": nil, "result": books})
 }
-func (u *UserModule) SearchBookByAuthor(c *gin.Context)  {
+func (u *UserModule) SearchBookByAuthor(c *gin.Context) {
 	inputData := struct {
 		Author string `form:"author"`
 	}{}
@@ -238,16 +225,16 @@ func (u *UserModule) SearchBookByAuthor(c *gin.Context)  {
 		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
 		return
 	}
-fmt.Println("SearchBookByAuthor AAAAAAAAAAAAAAAAAAAAA")
-	books := []Book{}
-	err := storage.C("books").Find(obj{"author":inputData.Author}).All(&books)
+	fmt.Println("SearchBookByAuthor AAAAAAAAAAAAAAAAAAAAA")
+	books := []models.Book{}
+	err := storage.C("books").Find(obj{"author": inputData.Author}).All(&books)
 	if err != nil {
 		fmt.Println("customer.go -> SearchBookByAuthor -> books not found, err:", err)
 		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
 		return
 	}
 	fmt.Println("sfsefsefs AAAAAAAAAAAA", books)
-	c.JSON(http.StatusOK, obj{"error":nil, "result":books})
+	c.JSON(http.StatusOK, obj{"error": nil, "result": books})
 }
 
 func (u *UserModule) Ajax(c *gin.Context) {

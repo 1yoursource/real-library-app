@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"lib-client-server/auto_incrementer"
+	"lib-client-server/client/models"
 	"net/http"
 )
 
@@ -54,13 +55,13 @@ func (a *AuthModule) Registration(c *gin.Context) {
 
 	var id = auto_incrementer.AI.Next("users")
 
-	if err := user.CreateUser(inputData,id); err != nil {
+	if err := user.CreateUser(inputData, id); err != nil {
 		fmt.Println("auth.go -> Registration -> CreateUser: err = ", err)
 		c.JSON(http.StatusInternalServerError, obj{"error": err.Error()})
 		return
 	}
 
-	a.Login(c, inputData.Email,id)
+	a.Login(c, inputData.Email, id)
 }
 
 func (a *AuthModule) Authorization(c *gin.Context) {
@@ -71,7 +72,7 @@ func (a *AuthModule) Authorization(c *gin.Context) {
 		return
 	}
 
-	var user User
+	var user models.User
 	if err := storage.C("users").Find(obj{"email": inputData.Login}).One(&user); err != nil {
 		fmt.Println("auth.go -> Authorization -> Find: err = ", err)
 		c.JSON(http.StatusInternalServerError, obj{"error": "not found"})
@@ -100,13 +101,14 @@ func (a *AuthModule) Login(c *gin.Context, email string, id uint64) {
 	fmt.Println("login")
 	//setCookie(c, "lib-customer", fmt.Sprint("user", "*lib"))
 	setCookie(c, "lib-login", fmt.Sprint(email, "*lib"))
-	setCookie(c, "lib-id", fmt.Sprint(id, "*lib"))
-	c.JSON(http.StatusOK, obj{"error": nil, "url": "/"})
+	setCookie(c, "lib-id", fmt.Sprint(id))
+	c.JSON(http.StatusOK, obj{"error": nil, "url": "/usr/main"})
 }
 
 func (a *AuthModule) Logout(c *gin.Context) {
 	deleteCookie(c, "lib-login")
 	//deleteCookie(c, "lib-customer")
 	deleteCookie(c, "lib-id")
-	pages.Auth(c)
+	//pages.Auth(c)
+	userPages.Auth(c)
 }

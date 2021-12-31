@@ -5,21 +5,22 @@ function getById(id) {
 $(function() {
 
     $('#searchBtn').on('click tap',function(){
-        console.log("f-",$('#search_filter').val())
         var filterId = $('#search_filter').val();
-        var filterVal = $('#input_search').val();
-        searchSearch(filterId, filterVal)
+        var filterVal = window.userId;
+        console.log("filterId: ",filterId)
+        console.log("filterVal: ",filterVal)
+        searchShell(filterId, filterVal)
     });
 
 });
 
-   function book_take(id){
+   function book_return(id){
            $.ajax({
                data: {
                     bookId: id,
                     userId: window.userId,
                },
-               url: '/ajax2/usr/book/take',
+               url: '/ajax2/usr/book/return',
                type: 'POST',
                timeout: 15000,
                error: function(result) {
@@ -27,7 +28,7 @@ $(function() {
                },
                success: function(result) {
                    if (result.error === null) {
-                        $("#user_search_table tr").remove('.table-row-'+id);
+                        $("#adm_search_table tr").remove('.table-row-'+id);
                    } else {
                        console.log("ERR")
                    }
@@ -35,7 +36,7 @@ $(function() {
            });
        }
 
-   function searchSearch(filterId, filterVal){
+   function searchShell(filterId, filterVal){
            $.ajax({
                data: {
                    filter: filterId,
@@ -53,16 +54,12 @@ $(function() {
                            return
                        }
                    $("#user_search_table td").parent().remove();
-                   console.log("rs",result.result)
                        switch (filterId) {
-                           case "1":
-                               makeTableResultSearch(result.result);
+                           case "4":
+                               makeTableResultShell(result.result);
                                break;
-                           case "2": // by name
-                               makeTableResultSearch(result.result);
-                               break;
-                           case "3": // by author
-                               makeTableResultSearch(result.result);
+                           case "5":
+                               makeTableResultShell(result.result);
                                break;
                        }
                    } else {
@@ -72,17 +69,16 @@ $(function() {
            });
        }
 
-    function makeTableResultSearch(result) {
+    function makeTableResultShell(result) {
         if (result == null || result.length == 0) {
             return
         }
         for (var i = 0; i<result.length; i++) {
-        console.log("I: ",result[i])
             $("#user_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
             '<td>'+result[i].Id+'</td>'+
             '<td>'+result[i].Name+'</td>'+
             '<td>'+result[i].Author+'</td>'+
-            '<td><button onclick="book_take(this.id)" id="'+result[i].Id+'" class="book_take">Взяти</button></td>'+
+            '<td><button onclick="book_return(this.id)" id="'+result[i].Id+'" class="book_take">Повернути</button></td>'+
             '</tr>');
         }
     }

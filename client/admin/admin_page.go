@@ -33,7 +33,7 @@ func (p *PagesModule) Handler(c *gin.Context) {
 	case "shell":
 		p.Shell(c)
 	default:
-		c.JSON(http.StatusNotFound,models.Obj{"error":"page does't exist"})
+		c.JSON(http.StatusNotFound, models.Obj{"error": "page does't exist"})
 	}
 }
 
@@ -49,45 +49,45 @@ func (p *PagesModule) Index(c *gin.Context) {
 		templateData["userId"] = p.getAdminId(c)
 	}
 
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","index.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "index.html"), templateData)
 }
 
 func (p *PagesModule) Search(c *gin.Context) {
-	var isLogin =  p.checkIsLogin(c)
+	var isLogin = p.checkIsLogin(c)
 
 	templateData := gin.H{
 		"isLogin": isLogin,
 	}
 
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","search.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "search.html"), templateData)
 }
 
 func (p *PagesModule) About(c *gin.Context) {
 	templateData := gin.H{
 		"isLogin": !p.checkIsLogin(c),
 	}
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","about.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "about.html"), templateData)
 }
 
 func (p *PagesModule) Shell(c *gin.Context) {
 	templateData := gin.H{
 		"isLogin": !p.checkIsLogin(c),
 	}
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","shell.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "shell.html"), templateData)
 }
 
 func (p *PagesModule) D(c *gin.Context) {
 	templateData := gin.H{
 		"isLogin": !p.checkIsLogin(c),
 	}
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","distribution-map.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "distribution-map.html"), templateData)
 }
 
 func (p *PagesModule) Auth(c *gin.Context) {
 	templateData := gin.H{
 		"isLogin": !p.checkIsLogin(c),
 	}
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix,"_","registration.html"), templateData)
+	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "registration.html"), templateData)
 }
 
 func (p *PagesModule) checkIsLogin(c *gin.Context) bool {
@@ -121,16 +121,14 @@ func (p *PagesModule) checkValidEmail(email string) bool {
 	// todo добавить норм проверку админ мыла
 }
 
-
-
 func getCookie(c *gin.Context, name string) (string, error) {
-	return helper.GetCookie(c,name)
+	return helper.GetCookie(c, name)
 }
 
 func setCookie(c *gin.Context, name string, value string) {
-	helper.SetCookie(c,name,value)
+	helper.SetCookie(c, name, value)
 }
 
 func deleteCookie(c *gin.Context, name string) {
-	helper.DeleteCookie(c,name)
+	helper.DeleteCookie(c, name)
 }
