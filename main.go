@@ -46,6 +46,7 @@ func main() {
 
 	r.POST("/ajax2/:customer/:module/:method", ajax2)
 	r.GET("/adm/:page", adminPages.Handler)
+	r.GET("/usr/:page", userPages.Handler)
 
 	fmt.Println("Application started on port 2200")
 
@@ -72,7 +73,7 @@ func ajax2(c *gin.Context) {
 	switch c.Param("customer") {
 	case "adm":
 		adm(c)
-	case "user":
+	case "usr":
 		usr(c)
 	default:
 		c.String(http.StatusBadRequest, "restricted")
@@ -91,6 +92,7 @@ func adm(c *gin.Context) {
 func usr(c *gin.Context) {
 	switch c.Param("module") {
 	case "book":
+		userBooks.Handler(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}

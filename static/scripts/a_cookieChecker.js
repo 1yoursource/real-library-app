@@ -20,11 +20,11 @@ function getCookie(name) {
 
 $(function() {
     var isLogin = getCookie("lib-login");
-    if (isLogin.length > 0) {
+    if (isLogin != null && isLogin.length > 0) {
         window.isLogin = true;
     }
     var userId = getCookie("lib-id");
-    if (id.length > 0) {
-        window.userId = id;
+    if (userId != null && userId.length > 0) {
+        window.userId = userId;
     }
 });

@@ -4,21 +4,22 @@ function getById(id) {
 
 $(function() {
 
-    $('#admSearchBtn').on('click tap',function(){
+    $('#usrSearchBtn').on('click tap',function(){
         console.log("f-",$('#search_filter').val())
         var filterId = $('#search_filter').val();
         var filterVal = $('#input_search').val();
-        search(filterId, filterVal)
+        searchSearch(filterId, filterVal)
     });
 
 });
 
-   function book_del(id){
+   function book_take(id){
            $.ajax({
                data: {
                     bookId: id,
+                    userId: window.userId,
                },
-               url: '/ajax2/adm/book/delete',
+               url: '/ajax2/usr/book/take',
                type: 'POST',
                timeout: 15000,
                error: function(result) {
@@ -26,7 +27,7 @@ $(function() {
                },
                success: function(result) {
                    if (result.error === null) {
-                        $("#adm_search_table tr").remove('.table-row-'+id);
+                        $("#user_search_table tr").remove('.table-row-'+id);
                    } else {
                        console.log("ERR")
                    }
@@ -34,13 +35,13 @@ $(function() {
            });
        }
 
-   function search(filterId, filterVal){
+   function searchSearch(filterId, filterVal){
            $.ajax({
                data: {
                    filter: filterId,
                    value: filterVal,
                },
-               url: '/ajax2/adm/book/search',
+               url: '/ajax2/usr/book/search',
                type: 'POST',
                timeout: 15000,
                error: function(result) {
@@ -51,18 +52,17 @@ $(function() {
                        if (result.result == null || result.result.length == 0) {
                            return
                        }
-                   $("#adm_search_table td").parent().remove();
+                   $("#user_search_table td").parent().remove();
+                   console.log("rs",result.result)
                        switch (filterId) {
                            case "1":
-                               makeTableResult(result.result);
+                               makeTableResultSearch(result.result);
                                break;
-                           case "2":
-                               makeTableResult(result.result);
+                           case "2": // by name
+                               makeTableResultSearch(result.result);
                                break;
-                           case "3":
-                               makeTableResult(result.result);
-                               break;
-                           case "4": // должники
+                           case "3": // by author
+                               makeTableResultSearch(result.result);
                                break;
                        }
                    } else {
@@ -72,17 +72,17 @@ $(function() {
            });
        }
 
-    function makeTableResult(result) {
-        if (result.length == 0) {
+    function makeTableResultSearch(result) {
+        if (result == null || result.length == 0) {
             return
         }
         for (var i = 0; i<result.length; i++) {
-            $("#adm_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
+        console.log("I: ",result[i])
+            $("#user_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
             '<td>'+result[i].Id+'</td>'+
             '<td>'+result[i].Name+'</td>'+
             '<td>'+result[i].Author+'</td>'+
-            //'<td><button onclick="book_edit(this.id)" id="'+result.result[i].Id+'" class="adm_book_edit">Edit</button>'+
-            '<td><button onclick="book_del(this.id)" id="'+result[i].Id+'" class="adm_book_delete">Delete</button></td>'+
+            '<td><button onclick="book_take(this.id)" id="'+result[i].Id+'" class="book_take">Взяти</button></td>'+
             '</tr>');
         }
     }

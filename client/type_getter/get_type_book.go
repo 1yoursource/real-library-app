@@ -1,10 +1,12 @@
 package type_getter
 
-import "lib-client-server/client"
+import (
+	"lib-client-server/client/models"
+)
 
-func GetTypeBook(data interface{}) (*client.Book,bool) {
+func GetTypeBook(data interface{}) (*models.Book, bool) {
 	switch v := data.(type) {
-	case client.Book:
+	case models.Book:
 		return &v, true
 	default:
 		return nil, false

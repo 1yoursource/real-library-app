@@ -1,22 +1,6 @@
 package client
 
-import (
-	"time"
-)
-
 type (
-
-	Book struct {
-		Id          uint64 `form:"id" bson:"_id"`
-		Name        string        `form:"name" bson:"name"`
-		Author      string        `form:"author" bson:"author"`
-		PublishYear uint64        `form:"publishYear" bson:"publishYear"`
-		Publisher   string        `form:"publisher" bson:"publisher"`
-		PagesCount  uint64        `form:"pagesCount" bson:"pagesCount"`
-		ReturnDate  time.Time     `form:"returnDate" bson:"returnDate"`
-		TakenBy     string    `json:"takenBy" bson:"takenBy"` // кем взято, если "" - книга доступна для взятия
-	}
-
 	AuthInterface interface {
 		Login()
 		Logout()
@@ -43,5 +27,4 @@ type (
 		Info()
 		Update() // недоступно для админа
 	}
-
 )

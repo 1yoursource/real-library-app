@@ -1,49 +1,19 @@
 package main
 
 import (
-	"time"
-
-	"gorm.io/gorm"
+	"lib-client-server/client/models"
 )
 
 type (
 	obj map[string]interface{}
 
-	Book struct {
-		Id          uint64    `json:"id" bson:"_id"`
-		Name        string    `json:"name" bson:"name"`
-		Author      string    `json:"author" bson:"author"`
-		PublishYear uint64    `json:"publishYear" bson:"publishYear"`
-		Publisher   string    `json:"publisher" bson:"publisher"`
-		PagesCount  uint64    `json:"pagesCount" bson:"pagesCount"`
-		ReturnDate  time.Time `json:"returnDate" bson:"returnDate"`
-		TakenBy     uint64    `json:"takenBy" bson:"takenBy"` // кем взято, если 0 - книга доступна для взятия
-	}
 	Debtor struct {
 		User  uint64
-		Books []Book
+		Books []models.Book
 	}
 	DebtorsList struct {
-		Date string `json:"date" bson:"_id"`
+		Date    string   `json:"date" bson:"_id"`
 		Debtors []Debtor `bson:"debtors"`
-	}
-	//Test struct {
-	//	Id   uuid.UUID `sql:"id"`
-	//	Name string    `sql:"name"`
-	//}
-
-	Test struct {
-		gorm.Model
-		//Id   int
-		Name string
-		//DataId in data_id"`
-		Data Data
-	}
-
-	Data struct {
-		gorm.Model
-		Test1ID int
-		Info    string
 	}
 )
 

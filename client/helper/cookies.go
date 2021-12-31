@@ -1,30 +1,35 @@
-package main
+package helper
 
 import (
+	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/sha3"
 	"io"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
+)
 
-	"github.com/pkg/errors"
+const (
+	coockieMaxAge = 32000000
 
-	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/crypto/sha3"
+	zero = 0
+	six  = 6
 )
 
 // createHashPassword - создает хэшированный пароль
-func createHashPassword(password string) ([]byte, error) {
+func CreateHashPassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
 
-func hashedPasswordCompare(password string, hashedPassword []byte) error {
+func HashedPasswordCompare(password string, hashedPassword []byte) error {
 	return bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 }
 
-func getCookie(c *gin.Context, name string) (string, error) {
+func GetCookie(c *gin.Context, name string) (string, error) {
 	data, err := c.Cookie(name)
 	if err != nil {
 		return "", err
@@ -41,7 +46,7 @@ func getCookie(c *gin.Context, name string) (string, error) {
 	return strings.Split(data, "*")[0], nil // при обращении к [0] никогда не паникнёт, из-за проверки выше (пример куки - abrakadabra18@gmail.com*lib)
 }
 
-func setCookie(c *gin.Context, name string, value string) {
+func SetCookie(c *gin.Context, name string, value string) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     name,
 		Value:    value,
@@ -52,7 +57,7 @@ func setCookie(c *gin.Context, name string, value string) {
 	})
 }
 
-func deleteCookie(c *gin.Context, name string) {
+func DeleteCookie(c *gin.Context, name string) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:    name,
 		Value:   "",
@@ -69,12 +74,12 @@ func H3hash(s string) string {
 }
 
 // func for temlate
-func toLower(name string) string {
+func ToLower(name string) string {
 	return strings.ToLower(name)
 }
 
 // func for temlate
-func toUpper(name string) string {
+func ToUpper(name string) string {
 	return strings.ToUpper(name)
 }
 
@@ -82,18 +87,3 @@ func GetRand(count float64) int {
 	rand.Seed(time.Now().UnixNano())
 	return int(rand.Float64() * count)
 }
-
-//
-/*
-
-	clientStorage.Get(bson.NewObjectId())
-	data, err := clientStorage.GetByQuery(models.Obj{}) // коллекция книг
-	if err != nil {
-		fmt.Println("err")
-		return
-	}
-	book, isIt:=type_getter.GetTypeBook(data)
-	if !isIt {
-		return
-	}
-*/

@@ -1,4 +1,4 @@
-package admin
+package customer
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ type (
 	}
 )
 
-func CreateAdminPagesModule(pagePrefix string) *PagesModule {
+func CreateUserPagesModule(pagePrefix string) *PagesModule {
 	return &PagesModule{pagePrefix: pagePrefix}
 }
 
@@ -46,7 +46,7 @@ func (p *PagesModule) Index(c *gin.Context) {
 	}
 
 	if isLogin {
-		templateData["userId"] = p.getAdminId(c)
+		templateData["userId"] = p.getUserId(c)
 	}
 
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "index.html"), templateData)
@@ -76,13 +76,6 @@ func (p *PagesModule) Shell(c *gin.Context) {
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "shell.html"), templateData)
 }
 
-func (p *PagesModule) D(c *gin.Context) {
-	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
-	}
-	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "distribution-map.html"), templateData)
-}
-
 func (p *PagesModule) Auth(c *gin.Context) {
 	templateData := gin.H{
 		"isLogin": !p.checkIsLogin(c),
@@ -100,7 +93,7 @@ func (p *PagesModule) checkIsLogin(c *gin.Context) bool {
 	return isLogin
 }
 
-func (p *PagesModule) getAdminId(c *gin.Context) string {
+func (p *PagesModule) getUserId(c *gin.Context) string {
 	if cookie, err := getCookie(c, "lib-id"); err == nil {
 		if p.checkValidId(cookie) {
 			// todo add validation 	for correct id

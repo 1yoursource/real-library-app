@@ -33,7 +33,7 @@
       <div class="row gutters10">
         <div class="logo-wrap col-xl-2 order-1">
           <div class="logo">
-            <a href="/">
+            <a href="/usr/main">
               <img class="logo-first" src="../static/assets/img/logo.svg" alt="">
               <img class="logo-second logo-scroll" src="../static/assets/img/logo-scroll.svg" alt="">
             </a>
@@ -57,7 +57,7 @@
                                   </ul>
                 -->
                                                 <li data-id="#submenu_4" class="nav-link submenu_li">
-                    <a href="/about" class="nav-link__item">Про нас</a>
+                    <a href="/usr/about" class="nav-link__item">Про нас</a>
                                     </li>
                   <!--_d
                   <li data-id="#submenu_5" class="nav-link submenu_li">
@@ -65,7 +65,7 @@
                                     </li>
                                     -->
                                   <li data-id="#submenu_6" class="nav-link submenu_li">
-                    <a href="/search" class="nav-link__item">Пошук</a>
+                    <a href="/usr/search" class="nav-link__item">Пошук</a>
                                     </li>
                               </ul>
                             <div class="nav-button__mbl">
@@ -89,10 +89,10 @@
               <ul class="nav-right__menu">
                                   
                           <li data-id="#submenu_61" class="nav-link">
-                            <a href="/shell" class="nav-link__item">Особистий кабінет</a>
+                            <a href="/usr/shell" class="nav-link__item">Особистий кабінет</a>
                             </li>
                           <li data-id="#submenu_7" class="nav-link submenu_li">
-                              <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                           </li>
               </ul>
                             <div class="gamburger-icon">
@@ -121,7 +121,7 @@
           <div class="mbl-container">
       <div class="mbl-wrapper">
                 <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/about">Про нас</a></h2>
+            <h2><a href="/usr/about">Про нас</a></h2>
           </div>
           <!--_d
                     <div class="mbl-wrapper__nav spoiler-title">
@@ -129,15 +129,15 @@
           </div>
           -->
                     <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/search">Пошук</a></h2>
+            <h2><a href="/usr/search">Пошук</a></h2>
           </div>		
                     <div class="mbl-wrapper__nav spoiler-title">
           </div>	
           <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/shell">Особистий кабінет</a></h2>
+            <h2><a href="/usr/shell">Особистий кабінет</a></h2>
           </div>	
                   <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/auth">Реєстрація/Авторізація</a></h2>
+            <h2><a href="/usr/auth">Реєстрація/Авторізація</a></h2>
           </div>				
                 <div class="mbl-blind-nav">
           <ul>
@@ -164,8 +164,8 @@
   <div class="container">
     <div class="cramps">
           <ul>
-            <li class="deactive"><a href="/">Головна</a></li>
-              <li class="active-cramps"><a href="/search" itemprop="url"><span itemprop="title">Пошук</span></a></li>
+            <li class="deactive"><a href="/usr/main">Головна</a></li>
+              <li class="active-cramps"><a href="/usr/search" itemprop="url"><span itemprop="title">Пошук</span></a></li>
           </ul>
             </div>
     <div class="row gutters10 pages-view">	
@@ -176,26 +176,28 @@
           <form action="/" method="POST" id="search-el-form" class="row gutters10 form-feedback">
             <div class="col-md-6 feedback-left-block">
               <div class="form-group">
-                <input type="type" name="input_search" id="searchBookByNameInput" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
-                 <a id="searchBookByName" data-name="searchBtnByName" title="Пошук" class="btn-wrap__footer button" href="#"><span>Шукати за назвою</span></a>
-
+                <input type="type" name="input_search" id="input_search" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
               </div>
+                <div class="form-group">
+                    <select name="search_filter" id="search_filter">
+                        <option value="1" selected>Усі книги</option>
+                        <option value="2">За назвою</option>
+                        <option value="3">За автором</option>
+                    </select>
+                </div>
               <div class="btn-wrap">
-                  <input type="type" name="input_search" id="searchBookByAuthorInput" value="" class="form-control required" placeholder="Пошук..." required="required" maxlength="250" data-valid="email">
-                  <a id="searchBookByAuthor" data-name="searchBtnByAuthor" title="Пошук" class="btn-wrap__footer button" href="#"><span>Шукати за автором</span></a>
-                  <br>
-                  <a id="getAllUsersBooks" data-name="getAllUsersBooks" title="Пошук" class="btn-wrap__footer button" href="#"><span>Мої книги</span></a>
-              </div>				
+                  <a id="usrSearchBtn" data-name="Пошук" title="Пошук" class="btn-wrap__footer button" href="#"><span>Пошук</span></a>
+              </div>
             </div>
           </form>
           <div class="row search-item">
             <table class="table table-bordered" id="user_search_table">
               <thead>
                 <tr>
-                  <th scope="col">BookID</th>
-                  <th scope="col">Author</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Actions</th>
+                  <th scope="col">Номер</th>
+                  <th scope="col">Назва</th>
+                  <th scope="col">Автор</th>
+                  <th scope="col">Дії</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,7 +246,7 @@
 		</div>
 		<div class="row gutters10 link-other__footer">
 					<div class="col-md-4 link-other">
-            <a href="/about"><h2>Про нас</h2></a>
+            <a href="/usr/about"><h2>Про нас</h2></a>
 					</div>
             <!--_d
                   <div class="col-md-4 link-other">
@@ -252,10 +254,10 @@
                       </div>2
                       -->
                   <div class="col-md-4 link-other">
-            <a href="/search"><h2>Пошук</h2></a>
+            <a href="/usr/search"><h2>Пошук</h2></a>
                       </div>
                   <div class="col-md-4 link-other">
-            <a href="/shell"><h2>Моя поличка</h2></a>
+            <a href="/usr/shell"><h2>Моя поличка</h2></a>
                       </div>
                   </div>
       </section>
@@ -268,7 +270,6 @@
           <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
           <script src="../static/scripts/a_cookieChecker.js"></script>
-          <script src="../static/scripts/booking.js"></script>
-
+          <script src="../static/scripts/u_search.js"></script>
   </body>
   </html>

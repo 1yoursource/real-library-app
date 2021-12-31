@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"lib-client-server/auto_incrementer"
-	"lib-client-server/client"
 	"lib-client-server/client/models"
 	"lib-client-server/database"
 	"net/http"
@@ -19,7 +18,7 @@ type Book struct {
 var bookModule *Book
 
 func CreateAdminBookModule(host, dbName string) models.BookInterface {
-	bookModule := &Book{Storage{collection:"books",Database:database.Connect(host,dbName, "libraryDatabase")}}
+	bookModule := &Book{Storage{collection: "books", Database: database.Connect(host, dbName, "libraryDatabase")}}
 	return bookModule
 }
 
@@ -40,7 +39,7 @@ func (b *Book) GetAll(c *gin.Context) {
 	// has rights?
 	var input = struct {
 		FilterId string `form:"filter"`
-		Value string `form:"value"`
+		Value    string `form:"value"`
 	}{}
 
 	if err := c.Bind(&input); err != nil {
@@ -50,20 +49,20 @@ func (b *Book) GetAll(c *gin.Context) {
 	}
 
 	var (
-		books []client.Book
-		err error
+		books []models.Book
+		err   error
 	)
 
 	switch input.FilterId {
 	case "1":
 		err = b.Storage.GetAll().All(&books)
 	case "2":
-		err = b.Storage.GetByQuery(models.Obj{"author":input.Value}).All(&books)
+		err = b.Storage.GetByQuery(models.Obj{"author": input.Value}).All(&books)
 	case "3": // все книги пользователя
-		err = b.Storage.GetByQuery(models.Obj{"takenBy":input.Value}).All(&books)
+		err = b.Storage.GetByQuery(models.Obj{"takenBy": input.Value}).All(&books)
 	case "4": // должники
 	default:
-		c.JSON(http.StatusBadRequest,models.Obj{"error":"unknown filter","result":[]client.Book{}})
+		c.JSON(http.StatusBadRequest, models.Obj{"error": "unknown filter", "result": []models.Book{}})
 		return
 	}
 
@@ -71,7 +70,7 @@ func (b *Book) GetAll(c *gin.Context) {
 }
 
 func (b *Book) Create(c *gin.Context) { // add book
-	var book = client.Book{}
+	var book = models.Book{}
 	if err := c.Bind(&book); err != nil {
 		fmt.Println("admin book Create -> Bind: err = ", err)
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
@@ -79,7 +78,7 @@ func (b *Book) Create(c *gin.Context) { // add book
 	}
 
 	if err := b.checkUniq(book); err != nil {
-		fmt.Println("admin book Create -> Registration -> checkUniq: err = ", err)
+		fmt.Println("admin book Create -> checkUniq: err = ", err)
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "book already exist"})
 		return
 	}
@@ -92,7 +91,7 @@ func (b *Book) Create(c *gin.Context) { // add book
 } // a:cr,u:get
 
 func (b *Book) Read(c *gin.Context) {
-	var book = client.Book{}
+	var book = models.Book{}
 	if err := c.Bind(&book); err != nil {
 		fmt.Println("admin book Read -> Bind: err = ", err)
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
@@ -109,7 +108,7 @@ func (b *Book) Read(c *gin.Context) {
 } // a:see,u:see info //todo NEED ?????
 
 func (b *Book) Update(c *gin.Context) { // todo unused
-	var book = client.Book{}
+	var book = models.Book{}
 	if err := c.Bind(&book); err != nil {
 		fmt.Println("admin book Update -> Bind: err = ", err)
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
@@ -119,12 +118,10 @@ func (b *Book) Update(c *gin.Context) { // todo unused
 	// todo ???
 	// add checking for new data in struct => by marshaling and compare 2 string
 
-	b.Storage.Update(book)
-
 } // a:edit,u:
 
 func (b *Book) Delete(c *gin.Context) {
-	var data = struct{
+	var data = struct {
 		BookId uint64 `form:"bookId"`
 	}{}
 
@@ -136,21 +133,23 @@ func (b *Book) Delete(c *gin.Context) {
 
 	err := b.Storage.Delete(data.BookId)
 
-	c.JSON(http.StatusOK,models.Obj{"error":err,"result":data.BookId})
+	c.JSON(http.StatusOK, models.Obj{"error": err, "result": data.BookId})
 } // a:del,u:return
 
-func (b *Book) checkUniq(newBook client.Book) error {
-	var book client.Book
-	err := b.Storage.GetByQuery(models.Obj{"author":newBook.Author,"name":newBook.Name,"publishYear":newBook.PublishYear}).One(&book)
+func (b *Book) checkUniq(newBook models.Book) error {
+	var book models.Book
+	err := b.Storage.GetByQuery(models.Obj{"author": newBook.Author, "name": newBook.Name, "publishYear": newBook.PublishYear}).One(&book)
 	switch {
 	case err == nil:
 		break
-	case strings.Contains(err.Error(),"not found"):
+	case strings.Contains(err.Error(), "not found"):
 		return nil
 	default:
 		return err
 	}
 
+	fmt.Println("n",newBook)
+	fmt.Println("nb",book)
 	switch {
 	case book.Id == 0:
 		return errors.New("does not exist")
