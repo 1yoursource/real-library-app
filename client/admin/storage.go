@@ -40,7 +40,7 @@ func (s *Storage) GetByQuery(query interface{}) *mgo.Query {
 	return s.C(s.collection).Find(query)
 }
 
-func (s *Storage) Update(data interface{}, query ...models.Obj) error {
+func (s *Storage) Update(selector models.Obj, updater models.Obj) error {
 	return nil
 }
 

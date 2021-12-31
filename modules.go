@@ -2,6 +2,7 @@ package main
 
 import (
 	"lib-client-server/client/admin"
+	"lib-client-server/client/customer"
 	"lib-client-server/client/main_opt"
 	"lib-client-server/client/models"
 )
@@ -19,10 +20,9 @@ var (
 	// book stotage
 	clientStorage models.StorageInterface
 
-	//adm
-	adminPages *admin.PagesModule
-	adminBooks models.BookInterface
-
+	adminPages            *admin.PagesModule
+	userPages             *customer.PagesModule
+	adminBooks, userBooks models.BookInterface
 )
 
 func CreateModules() {
@@ -34,7 +34,9 @@ func CreateModules() {
 
 	//
 	adminPages = createAdminPagesModule("admin")
-	adminBooks = createAdminBookModule("localhost","libDB")
+	adminBooks = createAdminBookModule("localhost", "libDB")
+	userPages = createUserPagesModule("user")
+	userBooks = createUserBookModule("localhost", "libDB")
 }
 
 func createBookStorageModule(host, name, cname string) models.StorageInterface {
@@ -62,7 +64,12 @@ func createStorageModule(host, name, cname string) *StorageModule {
 func createAdminPagesModule(prefixPage string) *admin.PagesModule {
 	return admin.CreateAdminPagesModule(prefixPage)
 }
+func createUserPagesModule(prefixPage string) *customer.PagesModule {
+	return customer.CreateUserPagesModule(prefixPage)
+}
 func createAdminBookModule(host, name string) models.BookInterface {
 	return admin.CreateAdminBookModule(host, name)
 }
-
+func createUserBookModule(host, name string) models.BookInterface {
+	return customer.CreateUserBookModule(host, name)
+}

@@ -11,7 +11,7 @@ type(
 		Get(key uint64) (interface{}, error)
 		GetByQuery(query interface{}) *mgo.Query
 		GetAll() *mgo.Query
-		Update(data interface{}, query ...Obj) error
+		Update(selector Obj, updater Obj) error
 		Delete(key uint64) error
 	}
 	BookInterface interface {

@@ -40,8 +40,8 @@ func (s *Storage) Get(key uint64) (interface{}, error) {
 	return nil, nil
 }
 
-func (s *Storage) Update(data interface{}, query ...models.Obj) error {
-	return nil
+func (s *Storage) Update(selector models.Obj, updater models.Obj) error {
+	return s.C(s.collection).Update(selector, updater)
 }
 
 func (s *Storage) Delete(key uint64) error {

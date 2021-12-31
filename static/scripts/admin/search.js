@@ -48,7 +48,7 @@ $(function() {
                },
                success: function(result) {
                    if (result.error === null) {
-                       if (result.error !== null && result.result.length == 0) {
+                       if (result.result == null || result.result.length == 0) {
                            return
                        }
                    $("#adm_search_table td").parent().remove();
@@ -73,7 +73,7 @@ $(function() {
        }
 
     function makeTableResult(result) {
-        if (result.length == 0) {
+        if (result == null || result.length == 0) {
             return
         }
         for (var i = 0; i<result.length; i++) {
@@ -82,7 +82,7 @@ $(function() {
             '<td>'+result[i].Name+'</td>'+
             '<td>'+result[i].Author+'</td>'+
             //'<td><button onclick="book_edit(this.id)" id="'+result.result[i].Id+'" class="adm_book_edit">Edit</button>'+
-            '<td><button onclick="book_del(this.id)" id="'+result[i].Id+'" class="adm_book_edit">Delete</button></td>'+
+            '<td><button onclick="book_del(this.id)" id="'+result[i].Id+'" class="adm_book_delete">Delete</button></td>'+
             '</tr>');
         }
     }

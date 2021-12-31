@@ -119,8 +119,6 @@ func (b *Book) Update(c *gin.Context) { // todo unused
 	// todo ???
 	// add checking for new data in struct => by marshaling and compare 2 string
 
-	b.Storage.Update(book)
-
 } // a:edit,u:
 
 func (b *Book) Delete(c *gin.Context) {

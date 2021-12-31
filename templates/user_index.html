@@ -33,7 +33,7 @@
         <div class="row gutters10">
             <div class="logo-wrap col-xl-2 order-1">
                 <div class="logo">
-                    <a href="/">
+                    <a href="/usr/main">
                         <img class="logo-first" src="../static/assets/img/logo.svg" alt="">
                         <img class="logo-second logo-scroll" src="../static/assets/img/logo-scroll.svg" alt="">
                     </a>
@@ -57,7 +57,7 @@
                     </ul>
                     -->
                     <li data-id="#submenu_4" class="nav-link submenu_li">
-                        <a href="/about" class="nav-link__item">Про нас</a>
+                        <a href="/usr/about" class="nav-link__item">Про нас</a>
                     </li>
                     <!--_d
                               <li data-id="#submenu_5" class="nav-link submenu_li">
@@ -65,7 +65,7 @@
                               </li>
                               -->
                     <li data-id="#submenu_6" class="nav-link submenu_li">
-                        <a href="/search" class="nav-link__item">Пошук</a>
+                        <a href="/usr/search" class="nav-link__item">Пошук</a>
                     </li>
                 </ul>
                 <!-- additional
@@ -88,13 +88,13 @@
             <div class="col-xl-5 nav-right order-2">
                 <ul class="nav-right__menu">
                     <li data-id="#submenu_61" class="nav-link">
-                        <a href="/shell" class="nav-link__item">Особистий кабінет</a>
+                        <a href="/usr/shell" class="nav-link__item">Особистий кабінет</a>
                     </li>
                     <li data-id="#submenu_7" class="nav-link submenu_li">
                         {{if .notLogin}}
-                            <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                            <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                         {{else}}
-                            <a href="/logout" class="nav-link__item">Вихід</a>
+                            <a href="/usr/logout" class="nav-link__item">Вихід</a>
                         {{end}}
                     </li>
                 </ul>
@@ -124,7 +124,7 @@
     <div class="mbl-container">
         <div class="mbl-wrapper">
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/about">Про нас</a></h2>
+                <h2><a href="/usr/about">Про нас</a></h2>
             </div>
             <!--_d
               <div class="mbl-wrapper__nav spoiler-title">
@@ -132,19 +132,19 @@
               </div>
               -->
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/search">Пошук</a></h2>
+                <h2><a href="/usr/search">Пошук</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/shell">Особистий кабінет</a></h2>
+                <h2><a href="/usr/shell">Особистий кабінет</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
                 <h2>
                     {{if .notLogin}}
-                        <a href="/auth">Реєстрація/Авторізація</a>
+                        <a href="/usr/auth">Реєстрація/Авторізація</a>
                     {{else}}
-                        <a href="/logout">Вихід</a>
+                        <a href="/usr/logout">Вихід</a>
                     {{end}}
                 </h2>
             </div>
@@ -410,7 +410,7 @@
         </div>
         <div class="row gutters10 link-other__footer">
             <div class="col-md-4 link-other">
-                <a href="/about"><h2>Про нас</h2></a>
+                <a href="/usr/about"><h2>Про нас</h2></a>
             </div>
             <!--_d
               <div class="col-md-4 link-other">
@@ -418,10 +418,10 @@
               </div>
               -->
             <div class="col-md-4 link-other">
-                <a href="/search"><h2>Пошук</h2></a>
+                <a href="/usr/search"><h2>Пошук</h2></a>
             </div>
             <div class="col-md-4 link-other">
-                <a href="/shell"><h2>Моя поличка</h2></a>
+                <a href="/usr/shell"><h2>Моя поличка</h2></a>
             </div>
         </div>
     </section>

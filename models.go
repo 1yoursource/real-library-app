@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type (
@@ -26,24 +24,6 @@ type (
 	DebtorsList struct {
 		Date string `json:"date" bson:"_id"`
 		Debtors []Debtor `bson:"debtors"`
-	}
-	//Test struct {
-	//	Id   uuid.UUID `sql:"id"`
-	//	Name string    `sql:"name"`
-	//}
-
-	Test struct {
-		gorm.Model
-		//Id   int
-		Name string
-		//DataId in data_id"`
-		Data Data
-	}
-
-	Data struct {
-		gorm.Model
-		Test1ID int
-		Info    string
 	}
 )
 

@@ -33,7 +33,7 @@
       <div class="row gutters10">
         <div class="logo-wrap col-xl-2 order-1">
           <div class="logo">
-            <a href="/">
+            <a href="/usr/main">
               <img class="logo-first" src="../static/assets/img/logo.svg" alt="">
               <img class="logo-second logo-scroll" src="../static/assets/img/logo-scroll.svg" alt="">
             </a>
@@ -57,7 +57,7 @@
                                   </ul>
                 -->
                                                 <li data-id="#submenu_4" class="nav-link submenu_li">
-                    <a href="/about" class="nav-link__item">Про нас</a>
+                    <a href="/usr/about" class="nav-link__item">Про нас</a>
                                     </li>
                   <!--_d
                                           <li data-id="#submenu_5" class="nav-link submenu_li">
@@ -65,7 +65,7 @@
                                             </li>
                           -->
                                   <li data-id="#submenu_6" class="nav-link submenu_li">
-                    <a href="/search" class="nav-link__item">Пошук</a>
+                    <a href="/usr/search" class="nav-link__item">Пошук</a>
                                     </li>
                               </ul>
                             <div class="nav-button__mbl">
@@ -89,10 +89,14 @@
               <ul class="nav-right__menu">
                                   
                           <li data-id="#submenu_61" class="nav-link">
-                            <a href="/shell" class="nav-link__item">Особистий кабінет</a>
+                            <a href="/usr/shell" class="nav-link__item">Особистий кабінет</a>
                             </li>
                           <li data-id="#submenu_7" class="nav-link submenu_li">
-                              <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{if .notLogin}}
+                                  <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{else}}
+                                  <a href="/usr/logout" class="nav-link__item">Вихід</a>
+                              {{end}}
                           </li>
               </ul>
                             <div class="gamburger-icon">
@@ -121,7 +125,7 @@
           <div class="mbl-container">
       <div class="mbl-wrapper">
                 <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/about">Про нас</a></h2>
+            <h2><a href="/usr/about">Про нас</a></h2>
           </div>
           <!--_d
                     <div class="mbl-wrapper__nav spoiler-title">
@@ -129,15 +133,21 @@
           </div>
           -->
                     <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/search">Пошук</a></h2>
+            <h2><a href="/usr/search">Пошук</a></h2>
           </div>		
                     <div class="mbl-wrapper__nav spoiler-title">
           </div>	
           <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/shell">Особистий кабінет</a></h2>
+            <h2><a href="/usr/shell">Особистий кабінет</a></h2>
           </div>	
                   <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/auth">Реєстрація/Авторізація</a></h2>
+            <h2>
+                {{if .notLogin}}
+                    <a href="/usr/auth">Реєстрація/Авторізація</a>
+                {{else}}
+                    <a href="/usr/logout">Вихід</a>
+                {{end}}
+            </h2>
           </div>				
                 <div class="mbl-blind-nav">
           <ul>
@@ -157,94 +167,116 @@
     </header>
 		<section class="section-title">
 	<div class="container">
-		<h1>Реєстрація / авторізація</h1>
+		<h1>Про нас</h1>
 	</div>	
 </section>
+    <div>
+        <a id="getBook" data-name="Взяти книгу" title="Взяти книгу" class="btn-wrap__footer button" href="#"><span>Взяти книгу</span></a>
+    </div>
 <section id="pages_view">
   <div class="container">
     <div class="cramps">
           <ul>
-            <li class="deactive"><a href="/">Головна</a></li>
-              <li class="active-cramps"><a href="/auth" itemprop="url"><span itemprop="title">Реєстрація / авторізація</span></a></li>
+            <li class="deactive"><a href="/usr/main">Головна</a></li>
+              <li class="active-cramps"><a href="/usr/about" itemprop="url"><span itemprop="title">Про нас</span></a></li>
           </ul>
             </div>
     <div class="row gutters10 pages-view">				
       <div class="col-md-12">
-        <nav class="nav nav-pills flex-column flex-sm-row">
-          <a class="flex-sm-fill text-sm-center nav-link active show" id="home-tab" data-toggle="tab" href="#dapps" role="tab" aria-controls="dapps" aria-selected="true">Реєстрація</a>
-          <a class="flex-sm-fill text-sm-center nav-link" id="profile-tab" data-toggle="tab" href="#explorer" role="tab" aria-controls="explorer" aria-selected="false">Авторізація</a>
-      </nav>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="dapps" role="tabpanel" aria-labelledby="home-tab">
-          <div class="col-md-12">
-            <div class="container-fluid">
-              <div class="form-header title-feedback">
-                <h2>Форма реєстрації</h2>
-              </div>
-              <form action="post" method="POST" id="reg-el-form" class="row gutters10 form-feedback">
-                <div class="col-md-6 feedback-left-block">
-                  <div class="form-group">
-                    <input type="email" name="reg_email" id="reg_email" value="" class="form-control required" placeholder="E-mail" required="required" maxlength="250" data-valid="email">
-                  </div>		
-                  <div class="form-group">
-                    <input type="password" name="reg_password" id="reg_password" value="" class="form-control required" placeholder="Пароль" required="required" maxlength="250" data-valid="password">
-                  </div>	
-                  <div class="form-group">
-                    <input type="password" name="reg_password-confirmation" id="reg_password-confirmation" value="" class="form-control required" placeholder="Підтвердження паролю" required="required" maxlength="250" data-valid="password-confirmation">
-                  </div>	
-                  <div class="form-group">
-                    <input type="text" name="reg_first_name" id="reg_first_name" value="" class="form-control required" placeholder="Ім'я" required="required" maxlength="250" data-valid="name">
-                  </div>
-                  <div class="form-group">
-                    <input type="text" name="reg_last_name" id="reg_last_name" value="" class="form-control required" placeholder="Прізвище" required="required" maxlength="250" data-valid="name">
-                  </div>		
-                  <div class="form-group">
-                    <input type="text" name="reg_surname" id="reg_surname" value="" class="form-control" placeholder="По батькові" required="required" maxlength="250" data-valid="name">
-                  </div>
-                  <div class="form-group">
-                    <input type="text" name="reg_faculty" id="reg_faculty" value="" class="form-control" placeholder="Факультет" required="required" maxlength="250" data-valid="name">
-                  </div>
-
-
-                  <div class="btn-wrap">
-                    <a id="regSubmitlBtn" data-name="Зареєструватися" title="Зареєструватися" class="btn-wrap__footer button" href="#"><span>Зареєструватися</span></a>
-                  </div>
-
-                </div>
-                
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="explorer" role="tabpanel" aria-labelledby="profile-tab">
-          <div class="col-md-12">
-            <div class="container-fluid">
-              <div class="form-header title-feedback">
-                <h2>Форма авторізації</h2>
-              </div>
-              <form action="post" method="POST" id="auth-el-form" class="row gutters10 form-feedback">
-                <div class="col-md-6 feedback-left-block">
-                  <div class="form-group">
-                    <input type="email" name="auth_email" id="auth_email" value="" class="form-control required" placeholder="E-mail" required="required" maxlength="250" data-valid="email">
-                  </div>		
-                  <div class="form-group">
-                    <input type="password" name="auth_password" id="auth_password" value="" class="form-control required" placeholder="Пароль" required="required" maxlength="250" data-valid="password">
-                  </div>	
-                  <div class="btn-wrap">
-                    <a id="authSubmitBtn" data-name="Авторизуватися" title="Авторизуватися" class="btn-wrap__footer button" href="#"><span>Авторизуватися</span></a>
-                  </div>			
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <p>Державне підприємство "<strong>Національні інформаційні системи</strong>" (надалі - ДП "<strong>НАІС</strong>") засноване Міністерством юстиції України в травні 2015 року.</p>
+<p>Організаційна структура ДП "<strong>НАІС</strong>": головне підприємство та 22 регіональні філії в обласних центрах України.</p>
+<p>Підприємство працює виключно на госпрозрахунковій основі.</p>
+<p>Основною метою діяльності Підприємства є технічне, технологічне забезпечення створення та супроводження програмного забезпечення ведення автоматизованих систем Єдиних та Державних реєстрів, що створюються відповідно до наказів Мін’юсту, а також інших електронних баз даних, що створюються відповідно до законодавства України, надання доступу фізичним та юридичним особам до автоматизованих систем Єдиних та Державних реєстрів, забезпечення збереження та захисту даних, що містяться в автоматизованих системах Єдиних та Державних реєстрів.</p>
+<p>&nbsp;</p>
+	</div>
     </div>
+    <div class="row gutters10 ">
+      <div class="col-12 contacts-title">
+        <h2>Головний офіс</h2>
       </div>
-    </div>
+            <div class="col-md-6">
+                      <div class="contacts-item">
+          <p class="contacts-item__title">АДРЕСА:</p>
+          <p class="contacts-item__description">вул. Бульварно-Кудрявська, 4, м. Київ, 04053</p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title">ВІДДІЛ ДОКУМЕНТАЛЬНОГО ЗАБЕЗПЕЧЕННЯ:</p>
+          <p class="contacts-item__description"><a href="tel:(044) 206-71-38">(044) 206-71-38</a></p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title">Електронна адреса для офіційного листування:</p>
+          <p class="contacts-item__description"><a href="mailto:inbox@nais.gov.ua">inbox@nais.gov.ua</a></p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title">CALL-ЦЕНТР:</p>
+          <p class="contacts-item__description"><a href="tel:0-800-508-584">0-800-508-584</a></p>
+        </div>
+                    </div>
+              <div class="col-md-6 contacts-item">
+                      <div class="contacts-item">
+          <p class="contacts-item__title">Технічна підтримка:</p>
+          <p class="contacts-item__description"><a href="mailto:reestry@nais.gov.ua">reestry@nais.gov.ua</a></p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title"><a href="https://www.facebook.com/1973712429514713/">Facebook</a>:</p>
+          <p class="contacts-item__description">&nbsp;</p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title"><a href="https://t.me/NAISreg">Telegram</a>:</p>
+          <p class="contacts-item__description">&nbsp;</p>
+        </div>
+                          <div class="contacts-item">
+          <p class="contacts-item__title"><a href="https://t.me/dpnais_bot">Telegram bot</a>:</p>
+          <p class="contacts-item__description">&nbsp;</p>
+        </div>
+                    </div>
+              <div class="col-md-6">
+                <div class="btn-wrap">
+                  <a id="sendPaymentBtn" data-name="Підтрімати проект" title="Підтрімати проект" class="btn-wrap__footer button" href="#"><span>Підтрімати проект</span></a>
+                </div>
+              </div>
+              
+      </div>
   </div>
-  
 </section>
 
+<div id="sendPayment" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="modal-close close">&times;</span>
+    <div class="form-header title-feedback">
+      <h2>Платіжні дані</h2>
+    </div>
+    <form action="post" method="POST" id="form-payment" class="row gutters10 form-feedback">
+      <div class="col-md-12 feedback-left-block">
+        <div class="form-group">
+          <input type="text" name="payment_name" id="payment_name" value="" class="form-control required" placeholder="ПІБ" required="required" maxlength="250" data-valid="name">
+        </div>
+        <div class="form-group">
+          <input type="email" name="payment_email" id="payment_email" value="" class="form-control required" placeholder="E-mail" required="required" maxlength="250" data-valid="email">
+        </div>		
+        <div class="form-group">
+          <input type="text" name="payment_card" id="payment_card" value="" class="form-control required" placeholder="Номер карти" required="required" maxlength="16" data-valid="name">
+        </div>		
+        <div class="form-group form-group-card">
+          <div class="form-ed-wrapper">
+            <input type="number" name="payment_expire_month" id="payment_expire_month" value="" class="form-control" placeholder="Місяць" min="1" max="12" data-valid="requiered">
+            <input type="number" name="payment_expire_year" id="payment_expire_year" value="" class="form-control" placeholder="Рік" min="21" max="30" data-valid="requiered">
+          </div>
+          <div class="form-ccv-wrapper">
+            <input type="password" name="payment_phone" id="payment_phone" value="" class="form-control" placeholder="CCV" maxlength="3" data-valid="requiered">
+          </div>
+        </div>	
+        <div class="btn-wrap text-center">
+          <a id="payment_submit" data-name="Відправити" title="Відправити" class="btn-wrap__footer button" href="#"><span>Відправити</span></a>
+        </div>												
+      </div>
+      
+    </form>
+  </div>
+
+</div>
 
 <footer>
 	<section class="footer-info container">
@@ -277,11 +309,11 @@
 			<div class="btn-wrap">
 				<a data-name="Реєстрація/Авторізація" title="Реєстрація/Авторізація" class="btn-wrap__footer button" href="/auth" title="Реєстрація/Авторізація"><span>Реєстрація/Авторізація</span></a>
 			</div>
-			-->
 		</div>
+            -->
 		<div class="row gutters10 link-other__footer">
 					<div class="col-md-4 link-other">
-            <a href="/about"><h2>Про нас</h2></a>
+            <a href="/usr/about"><h2>Про нас</h2></a>
 					</div>
             <!--_d
                   <div class="col-md-4 link-other">
@@ -289,12 +321,13 @@
                       </div>
               -->
 				<div class="col-md-4 link-other">
-          <a href="/search"><h2>Пошук</h2></a>
+          <a href="/usr/search"><h2>Пошук</h2></a>
 					</div>
 				<div class="col-md-4 link-other">
-          <a href="/shell"><h2>Моя поличка</h2></a>
+          <a href="/usr/shell"><h2>Моя поличка</h2></a>
 					</div>
 				</div>
+        </div>
 	</section>
 	<div class="copy-site">
 		<p>Всі права захищені. Державне підприємство "Національні інформаційні системи" ©  2021</p>
@@ -302,8 +335,8 @@
 </footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="../static/scripts/app.js"></script>
-    <script src="../static/scripts/authorization.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-	</body>
+    <script src="../static/scripts/booking.js"></script>
+    </body>
 </html>
