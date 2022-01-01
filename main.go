@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -99,33 +100,53 @@ func usr(c *gin.Context) {
 	}
 }
 func checkIsLoginAdm(c *gin.Context) {
-	checkIsLogin(c,"lib-admin")
+	checkIsLogin(c, "lib-admin")
 }
 
 func checkIsLoginUsr(c *gin.Context) {
-	checkIsLogin(c,"lib-login")
+	checkIsLogin(c, "lib-login")
 }
 
 func checkIsLogin(c *gin.Context, cookieName string) {
-	if needCheckLogin(c.Param("page")) {
-		coockie, err := getCookie(c,cookieName)
-		switch {
-		case err != nil:
-			break
-		case len(coockie) == 0:
-			break
-		default:
-			return
-		}
-		c.Redirect(http.StatusMovedPermanently,"auth")
+	var page = c.Param("page")
+
+	if !needCheckLogin(page) {
+		return
 	}
+
+	coockie, err := getCookie(c, cookieName)
+
+	var (
+		emptyCookies = len(coockie) == 0
+		code         = http.StatusMovedPermanently
+		location     = "auth"
+	)
+
+	switch {
+	case err != nil && !strings.Contains(err.Error(),"http: named cookie not present"):
+		break
+	case page == "logout" && emptyCookies: // якщо ти не залогінений, вихід повинен бути недоступний, редірект на головну
+		location = "main"
+		break
+	case page == "auth" && emptyCookies:
+		return
+	case emptyCookies:
+		break
+	case page == "auth": // якщо ти вже залогінений, сторінка аутентифікації повинна бути недоступна, редірект на головну
+		code, location = http.StatusFound, "main"
+		break
+	default:
+		return
+	}
+	c.Redirect(code, location)
+
 }
 
 func needCheckLogin(page string) bool {
 	switch page {
-	case "search", "shell":
-		return true
-	default: // main, auth, about, logout
+	case "about", "main":
 		return false
+	default: // search, shell, auth, logout
+		return true
 	}
 }
