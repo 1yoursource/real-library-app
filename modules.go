@@ -23,6 +23,8 @@ var (
 	adminPages            *admin.PagesModule
 	userPages             *customer.PagesModule
 	adminBooks, userBooks models.BookInterface
+
+	adminAuth *admin.AuthModule
 )
 
 func CreateModules() {
@@ -33,6 +35,7 @@ func CreateModules() {
 	clientStorage = createBookStorageModule("localhost", "libDB", "clientBookDBc")
 
 	//
+	adminAuth = createAdminAuthModule()
 	adminPages = createAdminPagesModule("admin")
 	adminBooks = createAdminBookModule("localhost", "libDB")
 	userPages = createUserPagesModule("user")
@@ -60,6 +63,10 @@ func createStorageModule(host, name, cname string) *StorageModule {
 }
 
 //
+
+func createAdminAuthModule() *admin.AuthModule {
+	return admin.CreateAuthModule()
+}
 
 func createAdminPagesModule(prefixPage string) *admin.PagesModule {
 	return admin.CreateAdminPagesModule(prefixPage)

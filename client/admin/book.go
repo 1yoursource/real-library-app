@@ -16,11 +16,8 @@ type Book struct {
 	Storage
 }
 
-var bookModule *Book
-
 func CreateAdminBookModule(host, dbName string) models.BookInterface {
-	bookModule := &Book{Storage{collection: "books", Database: database.Connect(host, dbName, "libraryDatabase")}}
-	return bookModule
+	return &Book{Storage{collection: "books", Database: database.Connect(host, dbName, "libraryDatabase")}}
 }
 
 func (b *Book) Handler(c *gin.Context) {

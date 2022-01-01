@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="193fdf1b-a312-4879-ab4f-21a0c296eec2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/admin/admin_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/scripts/admin/adm_auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/admin/book.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/admin/book.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer.go" beforeDir="false" afterPath="$PROJECT_DIR$/customer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go_build_lib_client_server" beforeDir="false" afterPath="$PROJECT_DIR$/go_build_lib_client_server" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user_about.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user_about.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules.go" beforeDir="false" afterPath="$PROJECT_DIR$/modules.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/admin_registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin_registration.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,9 +46,12 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../LetsGOSchoolTechnicTask_shop-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/scripts/admin" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/scripts/admin" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/static/scripts" />
       <recent name="$PROJECT_DIR$/client/helper" />
@@ -71,6 +78,10 @@
       <screen x="0" y="8" width="1920" height="1080" />
     </state>
     <state x="428" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640864653931" />
+    <state x="1129" y="324" width="612" height="384" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1641053596972">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1129" y="324" width="612" height="384" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1641053596972" />
     <state x="657" y="149" width="596" height="735" key="#go_build_lib-client-server" timestamp="1640859847517">
       <screen x="0" y="8" width="1920" height="1080" />
     </state>
@@ -79,26 +90,30 @@
       <screen x="0" y="8" width="1920" height="1080" />
     </state>
     <state x="753" y="284" width="424" height="478" key="FileChooserDialogImpl/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640883198856" />
-    <state width="1899" height="178" key="GridCell.Tab.0.bottom" timestamp="1641051957110">
+    <state width="1899" height="178" key="GridCell.Tab.0.bottom" timestamp="1641053827199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="178" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1641051957110" />
+    <state width="1899" height="178" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1641053827199" />
     <state width="1899" height="242" key="GridCell.Tab.0.bottom/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640953728493" />
-    <state width="1899" height="178" key="GridCell.Tab.0.center" timestamp="1641051957109">
+    <state width="1899" height="178" key="GridCell.Tab.0.center" timestamp="1641053827198">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="178" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1641051957109" />
+    <state width="1899" height="178" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1641053827198" />
     <state width="1899" height="242" key="GridCell.Tab.0.center/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640953728493" />
-    <state width="1899" height="178" key="GridCell.Tab.0.left" timestamp="1641051957108">
+    <state width="1899" height="178" key="GridCell.Tab.0.left" timestamp="1641053827197">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="178" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1641051957108" />
+    <state width="1899" height="178" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1641053827197" />
     <state width="1899" height="242" key="GridCell.Tab.0.left/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640953728492" />
-    <state width="1899" height="178" key="GridCell.Tab.0.right" timestamp="1641051957109">
+    <state width="1899" height="178" key="GridCell.Tab.0.right" timestamp="1641053827198">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="178" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1641051957109" />
+    <state width="1899" height="178" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1641053827198" />
     <state width="1899" height="242" key="GridCell.Tab.0.right/0.8.1920.1080/1920.0.1920.1080/3840.8.1920.1080@0.8.1920.1080" timestamp="1640953728493" />
+    <state width="498" height="445" key="SwitcherDM" timestamp="1641052475898">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="498" height="445" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1641052475898" />
     <state x="961" y="0" width="959" height="1039" key="dock-window-1" timestamp="1640956334196">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

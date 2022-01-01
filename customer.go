@@ -2,11 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"gopkg.in/mgo.v2/bson"
 	"lib-client-server/client/models"
-	"net/http"
-	"strings"
 	"time"
 )
 
@@ -21,121 +17,6 @@ type (
 
 func (u UserModule) Create() *UserModule {
 	return &u
-}
-
-func (u *UserModule) GetBook(c *gin.Context) {
-
-	fmt.Println("sfsefad GetBook ")
-	inputData := struct {
-		UserId string `form:"userId"`
-		BookId string `form:"bookId"`
-	}{}
-
-	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
-		return
-	}
-
-	fmt.Println("sfsefad GetBook 2 ", inputData)
-	user := models.User{}
-	book := models.Book{}
-	userId := strings.Split(inputData.UserId, "*")
-	err := storage.C("users").Find(obj{"_id": userId[0]}).One(&user)
-	if err != nil {
-		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
-		return
-	}
-
-	err = storage.C("books").FindId(obj{"_id": inputData.BookId}).One(&book)
-	if err != nil {
-		fmt.Println("customer.go -> GetBook -> book not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
-		return
-	}
-	// проверяем на занятость
-	if len(book.TakenBy) > 0 {
-		c.JSON(http.StatusBadRequest, obj{"error": "Book already taken"})
-		return
-	}
-	// добавляем в список
-	user.Books = append(user.Books, book)
-	//сохраняем в базу юзеров изменения.
-	storage.C("users").Update(user.Id, user)
-
-	book.TakenBy = fmt.Sprint(user.Id)
-	book.ReturnDate = time.Now().AddDate(0, 0, 30) // 30 дней с момента взятия книги
-	// сохраняем в базу книг
-	storage.C("books").Update(book.Id, book)
-
-	c.JSON(http.StatusOK, obj{"answer": "ok"})
-
-}
-
-func (u *UserModule) ReturnBook(c *gin.Context) {
-	inputData := struct {
-		UserId string `form:"userId"`
-		BookId string `form:"bookId"`
-	}{}
-	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
-		return
-	}
-
-	user := models.User{}
-	book := models.Book{}
-	err := storage.C("users").FindId(bson.ObjectId(inputData.UserId)).One(&user)
-	if err != nil {
-		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
-		return
-	}
-	err = storage.C("books").FindId(bson.ObjectId(inputData.BookId)).One(&book)
-	if err != nil {
-		fmt.Println("customer.go -> GetBook -> book not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
-		return
-	}
-	userBooksNew := []models.Book{}
-	for _, v := range user.Books {
-		if book.Id != v.Id {
-			userBooksNew = append(userBooksNew, v)
-		}
-	}
-	user.Books = userBooksNew
-	// сохраняем в базу юзеров
-	storage.C("users").Update(user.Id, user)
-
-	book.TakenBy = ""
-	//сохраняем в базу книг
-	storage.C("books").Update(book.Id, book)
-
-	c.JSON(http.StatusOK, obj{"answer": "ok"})
-}
-
-// получить список книг у читателя
-func (u *UserModule) GetAllTakenBooks(c *gin.Context) {
-	userId, err := c.Cookie("lib-id")
-	if err != nil {
-		fmt.Println("errrrrrrrooooorrrrr ")
-		return
-	}
-	fmt.Println("userId str ", userId)
-	userIdSlice := strings.Split(userId, "*")
-	userId = userIdSlice[0]
-	fmt.Println("userId str 2", userId)
-	user := models.User{}
-	err = storage.C("users").Find(obj{"_id": userId}).One(&user)
-	if err != nil {
-		fmt.Println("customer.go -> GetBook -> user not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "user not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, obj{"books": user.Books})
-
 }
 
 func (u *UserModule) CreateUser(data Registration, id uint64) error {
@@ -167,90 +48,13 @@ func (u *UserModule) CreateUser(data Registration, id uint64) error {
 }
 
 func (r *Registration) CheckEmail() error {
-	fmt.Println("email: ", r.Email)
-	fmt.Println("storage: ", storage)
-	fmt.Println("storage.C(users)", storage.C("users"))
-	fmt.Println("email: ", r.Email)
 	count, err := storage.C("users").Find(obj{"email": r.Email}).Count()
-	fmt.Println("count: ", count)
-	fmt.Println("err: ", err)
-
 	switch {
 	case err != nil:
 		break
 	case count > 0:
-		fmt.Println("HETE: ", count, "--", err)
 		err = fmt.Errorf("already registered")
 	}
 
 	return err
-}
-
-//func (r *Registration) checkFaculty() {
-//	r.FirstName
-//}
-
-// todo
-func (u *UserModule) BlockUser() {
-
-}
-
-func (u *UserModule) SearchBookByTitle(c *gin.Context) {
-	inputData := struct {
-		BookName string `form:"bookName"`
-	}{}
-	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("customer.go -> GetBook -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
-		return
-	}
-	fmt.Println("here 1 searchBookByName", inputData)
-
-	books := []models.Book{}
-	err := storage.C("books").Find(obj{"name": inputData.BookName}).All(&books)
-	if err != nil {
-		fmt.Println("customer.go -> SearchBookByTitle -> books not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
-		return
-	}
-	fmt.Println("sfsfsefeef SearchBookByTitle", books)
-	c.JSON(http.StatusOK, obj{"error": nil, "result": books})
-}
-func (u *UserModule) SearchBookByAuthor(c *gin.Context) {
-	inputData := struct {
-		Author string `form:"author"`
-	}{}
-	if err := c.Bind(&inputData); err != nil {
-		fmt.Println("customer.go -> SearchBookByAuthor -> Bind: err = ", err)
-		c.JSON(http.StatusInternalServerError, obj{"error": "wrong"})
-		return
-	}
-	fmt.Println("SearchBookByAuthor AAAAAAAAAAAAAAAAAAAAA")
-	books := []models.Book{}
-	err := storage.C("books").Find(obj{"author": inputData.Author}).All(&books)
-	if err != nil {
-		fmt.Println("customer.go -> SearchBookByAuthor -> books not found, err:", err)
-		c.JSON(http.StatusNotFound, obj{"error": "book not found"})
-		return
-	}
-	fmt.Println("sfsefsefs AAAAAAAAAAAA", books)
-	c.JSON(http.StatusOK, obj{"error": nil, "result": books})
-}
-
-func (u *UserModule) Ajax(c *gin.Context) {
-	switch c.Param("method") {
-	case "getBook":
-		fmt.Println("sfsefsw ajax")
-		u.GetBook(c)
-	case "returnBook":
-		u.ReturnBook(c)
-	case "getAllTakenBooks":
-		u.GetAllTakenBooks(c)
-	case "searchBookByName":
-		u.SearchBookByTitle(c)
-	case "searchBookByAuthor":
-		u.SearchBookByAuthor(c)
-	default:
-		c.String(http.StatusBadRequest, "Method not found in module \"PRO<O\"!")
-	}
 }
