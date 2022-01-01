@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/carlescere/scheduler"
 	"net/http"
 	"os"
 	"os/signal"
@@ -45,7 +44,7 @@ func main() {
 	r.POST("/ajax/:module/:method", ajax)
 
 	r.POST("/ajax2/:customer/:module/:method", ajax2)
-	r.GET("/adm/:page", adminPages.Handler)
+	r.GET("/adm/:page", checkIsLoginAdm, adminPages.Handler)
 	r.GET("/usr/:page", checkIsLoginUsr, userPages.Handler)
 
 	fmt.Println("Application started on port 2200")
@@ -53,7 +52,7 @@ func main() {
 	if err := r.Run(":2200"); err != nil {
 		fmt.Println("main.go -> main: err = ", err)
 	}
-	scheduler.Every().Day().At("00:30:00").Run(MakeDebtorsList)
+	//scheduler.Every().Day().At("00:30:00").Run(MakeDebtorsList)
 }
 func ajax(c *gin.Context) {
 	c.Header("Expires", time.Now().String())
@@ -99,24 +98,21 @@ func usr(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
 }
-
-//func checkIsLoginAdm(c *gin.Context) {
-//	if needCheckLogin(c.Param("page")) {
-//		coockie, err := getCookie(c,"lib-login")
-//		if err != nil {
-//			c.Redirect(http.StatusMovedPermanently,"")
-//		}
-//	}
-//}
+func checkIsLoginAdm(c *gin.Context) {
+	checkIsLogin(c,"lib-admin")
+}
 
 func checkIsLoginUsr(c *gin.Context) {
-	fmt.Println("Log check")
+	checkIsLogin(c,"lib-login")
+}
+
+func checkIsLogin(c *gin.Context, cookieName string) {
 	if needCheckLogin(c.Param("page")) {
-		coockie, err := getCookie(c,"lib-login")
-		fmt.Println("Log coockie ", coockie)
-		fmt.Println("Log err ", err)
+		coockie, err := getCookie(c,cookieName)
 		switch {
 		case err != nil:
+			break
+		case len(coockie) == 0:
 			break
 		default:
 			return
