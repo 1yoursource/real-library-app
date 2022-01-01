@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -35,18 +36,18 @@ func main() {
 
 	CreateModules()
 
-	r.GET("/", pages.Index)
-	r.GET("/search", pages.Search)
-	r.GET("/about", pages.About)
-	r.GET("/shell", pages.Shell)
+	//r.GET("/", pages.Index)
+	//r.GET("/search", pages.Search)
+	//r.GET("/about", pages.About)
+	//r.GET("/shell", pages.Shell)
 	//r.GET("/d", pages.D)
-	r.GET("/logout", auth.Logout)
-	r.GET("/auth", pages.Auth)
+	//r.GET("/logout", auth.Logout)
+	//r.GET("/auth", pages.Auth)
 	r.POST("/ajax/:module/:method", ajax)
 
 	r.POST("/ajax2/:customer/:module/:method", ajax2)
 	r.GET("/adm/:page", adminPages.Handler)
-	r.GET("/usr/:page", userPages.Handler)
+	r.GET("/usr/:page", checkIsLoginUsr, userPages.Handler)
 
 	fmt.Println("Application started on port 2200")
 
@@ -84,6 +85,8 @@ func adm(c *gin.Context) {
 	switch c.Param("module") {
 	case "book":
 		adminBooks.Handler(c)
+	case "user":
+		adminBooks.Handler(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
@@ -95,5 +98,41 @@ func usr(c *gin.Context) {
 		userBooks.Handler(c)
 	default:
 		c.String(http.StatusBadRequest, "Module not found!")
+	}
+}
+
+//func checkIsLoginAdm(c *gin.Context) {
+//	if needCheckLogin(c.Param("page")) {
+//		coockie, err := getCookie(c,"lib-login")
+//		if err != nil {
+//			c.Redirect(http.StatusMovedPermanently,"")
+//		}
+//	}
+//}
+
+func checkIsLoginUsr(c *gin.Context) {
+	fmt.Println("Log check")
+	if needCheckLogin(c.Param("page")) {
+		coockie, err := getCookie(c,"lib-login")
+		fmt.Println("Log coockie ", coockie)
+		fmt.Println("Log err ", err)
+		switch {
+		case err != nil:
+			break
+		case !strings.Contains(coockie,"*lib"):
+			break
+		default:
+			return
+		}
+		c.Redirect(http.StatusMovedPermanently,"auth")
+	}
+}
+
+func needCheckLogin(page string) bool {
+	switch page {
+	case "search", "shell":
+		return true
+	default: // main, auth, about, logout
+		return false
 	}
 }

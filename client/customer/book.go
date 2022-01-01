@@ -93,9 +93,16 @@ func (b *Book) Create(c *gin.Context) { // користувач бере кни�
 		return
 	}
 
+	var user models.User
+	if err := b.Storage.C("users").FindId(data.UserId).One(&user); err != nil {
+		fmt.Println("usr book Create -> checkAvailable: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": err})
+		return
+	}
+
 	var (
 		selector = models.Obj{"_id": data.BookId}
-		updater  = models.Obj{"$set": models.Obj{"takenBy": fmt.Sprint(data.UserId), "returnDate": time.Now().AddDate(0, 1, 0)}}
+		updater  = models.Obj{"$set": models.Obj{"takenBy": user.TicketNumber, "returnDate": time.Now().AddDate(0, 1, 0)}}
 	)
 
 	if err := b.Storage.Update(selector, updater); err != nil {

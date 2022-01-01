@@ -30,7 +30,7 @@ $(function() {
                    if (result.error === null) {
                         $("#user_search_table tr").remove('.table-row-'+id);
                    } else {
-                       console.log("ERR")
+                       alert(result.error);
                    }
                },
            });
@@ -63,7 +63,7 @@ $(function() {
                                break;
                        }
                    } else {
-                       console.log("eeeeeeeerr")
+                       alert(result.error);
                    }
                },
            });

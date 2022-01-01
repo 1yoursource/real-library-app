@@ -33,7 +33,7 @@
         <div class="row gutters10">
             <div class="logo-wrap col-xl-2 order-1">
                 <div class="logo">
-                    <a href="/">
+                    <a href="/adm/main">
                         <img class="logo-first" src="../static/assets/img/logo.svg" alt="">
                         <img class="logo-second logo-scroll" src="../static/assets/img/logo-scroll.svg" alt="">
                     </a>
@@ -57,7 +57,7 @@
                                     </ul>
                   -->
                     <li data-id="#submenu_4" class="nav-link submenu_li">
-                        <a href="/about" class="nav-link__item">Про нас</a>
+                        <a href="/adm/about" class="nav-link__item">Про нас</a>
                     </li>
                     <!--_d
                                             <li data-id="#submenu_5" class="nav-link submenu_li">
@@ -65,7 +65,7 @@
                                               </li>
                             -->
                     <li data-id="#submenu_6" class="nav-link submenu_li">
-                        <a href="/search" class="nav-link__item">Пошук</a>
+                        <a href="/adm/search" class="nav-link__item">Пошук</a>
                     </li>
                 </ul>
                 <div class="nav-button__mbl">
@@ -89,11 +89,11 @@
                 <ul class="nav-right__menu">
 
                     <li data-id="#submenu_61" class="nav-link">
-                        <a href="/shell" class="nav-link__item">Особистий кабінет</a>
+                        <a href="/adm/shell" class="nav-link__item">Особистий кабінет</a>
                     </li>
                     <li data-id="#submenu_7" class="nav-link submenu_li">
                         {{if .notLogin}}
-                            <a href="/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                            <a href="/adm/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                         {{else}}
                             <a href="/logout" class="nav-link__item">Вихід</a>
                         {{end}}
@@ -125,7 +125,7 @@
     <div class="mbl-container">
         <div class="mbl-wrapper">
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/about">Про нас</a></h2>
+                <h2><a href="/adm/about">Про нас</a></h2>
             </div>
             <!--_d
                       <div class="mbl-wrapper__nav spoiler-title">
@@ -133,17 +133,17 @@
             </div>
             -->
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/search">Пошук</a></h2>
+                <h2><a href="/adm/search">Пошук</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/shell">Особистий кабінет</a></h2>
+                <h2><a href="/adm/shell">Моя поличка</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
                 <h2>
                     {{if .notLogin}}
-                        <a href="/auth">Реєстрація/Авторізація</a>
+                        <a href="/adm/auth">Реєстрація/Авторізація</a>
                     {{else}}
                         <a href="/logout">Вихід</a>
                     {{end}}
@@ -174,8 +174,8 @@
     <div class="container">
         <div class="cramps">
             <ul>
-                <li class="deactive"><a href="/">Головна</a></li>
-                <li class="active-cramps"><a href="/about" itemprop="url"><span itemprop="title">Про нас</span></a></li>
+                <li class="deactive"><a href="/adm/main">Головна</a></li>
+                <li class="active-cramps"><a href="/adm/about" itemprop="url"><span itemprop="title">Про нас</span></a></li>
             </ul>
         </div>
         <div class="row gutters10 pages-view">
@@ -227,11 +227,13 @@
                     <p class="contacts-item__description">&nbsp;</p>
                 </div>
             </div>
+            <!-- todo Popup Попап
             <div class="col-md-6">
                 <div class="btn-wrap">
                     <a id="sendPaymentBtn" data-name="Підтрімати проект" title="Підтрімати проект" class="btn-wrap__footer button" href="#"><span>Підтрімати проект</span></a>
                 </div>
             </div>
+            -->
 
         </div>
     </div>
@@ -304,13 +306,13 @@
             </div>
             <!--
 			<div class="btn-wrap">
-				<a data-name="Реєстрація/Авторізація" title="Реєстрація/Авторізація" class="btn-wrap__footer button" href="/auth" title="Реєстрація/Авторізація"><span>Реєстрація/Авторізація</span></a>
+				<a data-name="Реєстрація/Авторізація" title="Реєстрація/Авторізація" class="btn-wrap__footer button" href="/adm/auth" title="Реєстрація/Авторізація"><span>Реєстрація/Авторізація</span></a>
 			</div>
 		</div>
             -->
             <div class="row gutters10 link-other__footer">
                 <div class="col-md-4 link-other">
-                    <a href="/about"><h2>Про нас</h2></a>
+                    <a href="/adm/about"><h2>Про нас</h2></a>
                 </div>
                 <!--_d
                       <div class="col-md-4 link-other">
@@ -318,10 +320,10 @@
                           </div>
                   -->
                 <div class="col-md-4 link-other">
-                    <a href="/search"><h2>Пошук</h2></a>
+                    <a href="/adm/search"><h2>Пошук</h2></a>
                 </div>
                 <div class="col-md-4 link-other">
-                    <a href="/shell"><h2>Моя поличка</h2></a>
+                    <a href="/adm/shell"><h2>Моя поличка</h2></a>
                 </div>
             </div>
         </div>

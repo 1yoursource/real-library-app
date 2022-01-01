@@ -46,6 +46,11 @@ func (a *AuthModule) Registration(c *gin.Context) {
 		return
 	}
 
+	if inputData.checkEmpty() {
+		c.JSON(http.StatusInternalServerError, obj{"error": "please, fill all field"})
+		return
+	}
+
 	if !inputData.passwordCompare() {
 		c.JSON(http.StatusInternalServerError, obj{"error": "please, use equals passwords"})
 		return
@@ -95,6 +100,28 @@ func (ad *AuthData) checkPassword(userPassword []byte) error {
 
 func (r *Registration) passwordCompare() bool {
 	return r.Password == r.PasswordSubmit
+}
+
+func (r *Registration) checkEmpty() bool {
+	if len(r.Email) == 0 {
+		return true
+	}
+	if len(r.Password) == 0 {
+		return true
+	}
+	if len(r.PasswordSubmit) == 0 {
+		return true
+	}
+	if len(r.FirstName) == 0 {
+		return true
+	}
+	if len(r.LastName) == 0 {
+		return true
+	}
+	if len(r.Faculty) == 0 {
+		return true
+	}
+	return false
 }
 
 func (a *AuthModule) Login(c *gin.Context, email string, id uint64) {

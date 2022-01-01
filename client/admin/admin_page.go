@@ -32,6 +32,10 @@ func (p *PagesModule) Handler(c *gin.Context) {
 		p.About(c)
 	case "shell":
 		p.Shell(c)
+	case "logout":
+		deleteCookie(c, "lib-login")
+		deleteCookie(c, "lib-id")
+		p.Auth(c)
 	default:
 		c.JSON(http.StatusNotFound, models.Obj{"error": "page does't exist"})
 	}
@@ -64,28 +68,28 @@ func (p *PagesModule) Search(c *gin.Context) {
 
 func (p *PagesModule) About(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "about.html"), templateData)
 }
 
 func (p *PagesModule) Shell(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "shell.html"), templateData)
 }
 
 func (p *PagesModule) D(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "distribution-map.html"), templateData)
 }
 
 func (p *PagesModule) Auth(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "registration.html"), templateData)
 }

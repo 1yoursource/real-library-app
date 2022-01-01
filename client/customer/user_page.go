@@ -3,8 +3,10 @@ package customer
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/night-codes/types.v1"
 	"lib-client-server/client/helper"
 	"lib-client-server/client/models"
+	"lib-client-server/database"
 	"net/http"
 	"strings"
 )
@@ -32,6 +34,10 @@ func (p *PagesModule) Handler(c *gin.Context) {
 		p.About(c)
 	case "shell":
 		p.Shell(c)
+	case "logout":
+		deleteCookie(c, "lib-login")
+		deleteCookie(c, "lib-id")
+		p.Auth(c)
 	default:
 		c.JSON(http.StatusNotFound, models.Obj{"error": "page does't exist"})
 	}
@@ -53,10 +59,8 @@ func (p *PagesModule) Index(c *gin.Context) {
 }
 
 func (p *PagesModule) Search(c *gin.Context) {
-	var isLogin = p.checkIsLogin(c)
-
 	templateData := gin.H{
-		"isLogin": isLogin,
+		"isLogin": p.checkIsLogin(c),
 	}
 
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "search.html"), templateData)
@@ -64,21 +68,46 @@ func (p *PagesModule) Search(c *gin.Context) {
 
 func (p *PagesModule) About(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
+	fmt.Println("ab", templateData)
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "about.html"), templateData)
 }
 
 func (p *PagesModule) Shell(c *gin.Context) {
+	var isLogin = p.checkIsLogin(c)
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": isLogin,
 	}
+
+	if isLogin {
+		// отримуємо користувача
+		if idStr, err := getCookie(c, "lib-id"); err == nil {
+			var user models.User
+			if err := database.Connect("localhost",
+				"libDB",
+				"libraryDatabase",
+			).C("users").FindId(types.Uint64(idStr)).One(&user); err == nil {
+				if user.Id != 0 {
+					templateData["userfName"] = user.FirstName
+					templateData["userlName"] = user.LastName
+					templateData["usersName"] = user.SurName
+					templateData["userEmail"] = user.Email
+					templateData["userTicketNumber"] = user.TicketNumber
+					templateData["userFaculty"] = user.Faculty
+				} else {
+					isLogin = false
+				}
+			}
+		}
+	}
+
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "shell.html"), templateData)
 }
 
 func (p *PagesModule) Auth(c *gin.Context) {
 	templateData := gin.H{
-		"isLogin": !p.checkIsLogin(c),
+		"isLogin": p.checkIsLogin(c),
 	}
 	c.HTML(http.StatusOK, fmt.Sprint(p.pagePrefix, "_", "registration.html"), templateData)
 }
