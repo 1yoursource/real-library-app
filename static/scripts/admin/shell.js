@@ -22,7 +22,7 @@ $(function() {
                         console.log("res:", result)
                         window.location.reload();
                     } else {
-                        console.log("eeeeeeeerr")
+                       alert(result.error);
                     }
                 },
             });
@@ -61,7 +61,7 @@ $(function() {
                            break;
                    }
                } else {
-                   console.log("eeeeeeeerr")
+                       alert(result.error);
                }
            },
        });
@@ -73,9 +73,9 @@ $(function() {
         }
         for (var i = 0; i<result.length; i++) {
             $("#adm_dept_table").append('<tr class="table-row-'+result[i].Id+'">'+
-            '<td>'+result[i].ticketNumber+'</td>'+
-            '<td>'+result[i].book+'</td>'+
-            '<td>'+result[i].returnDate+'</td>'+
+            '<td>'+result[i].TicketNumber+'</td>'+
+            '<td>'+result[i].Book+'</td>'+
+            '<td>'+result[i].ReturnDate+'</td>'+
             '</tr>');
         }
     }

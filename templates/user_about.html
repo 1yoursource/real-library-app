@@ -65,7 +65,7 @@
                                             </li>
                           -->
                                   <li data-id="#submenu_6" class="nav-link submenu_li">
-                    <a href="/usr/search" class="nav-link__item">Пошук</a>
+                    <a href="/usr{{if .isLogin}}/search{{else}}/auth{{end}}" class="nav-link__item">Пошук</a>
                                     </li>
                               </ul>
                             <div class="nav-button__mbl">
@@ -89,13 +89,13 @@
               <ul class="nav-right__menu">
                                   
                           <li data-id="#submenu_61" class="nav-link">
-                            <a href="/usr/shell" class="nav-link__item">Особистий кабінет</a>
+                            <a href="/usr{{if .isLogin}}/shell{{else}}/auth{{end}}" class="nav-link__item">Моя поличка</a>
                             </li>
                           <li data-id="#submenu_7" class="nav-link submenu_li">
-                              {{if .notLogin}}
-                                  <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
-                              {{else}}
+                              {{if .isLogin}}
                                   <a href="/usr/logout" class="nav-link__item">Вихід</a>
+                              {{else}}
+                                  <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                               {{end}}
                           </li>
               </ul>
@@ -133,19 +133,19 @@
           </div>
           -->
                     <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/usr/search">Пошук</a></h2>
+            <h2><a href="/usr{{if .isLogin}}/search{{else}}/auth{{end}}">Пошук</a></h2>
           </div>		
                     <div class="mbl-wrapper__nav spoiler-title">
           </div>	
           <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/usr/shell">Особистий кабінет</a></h2>
+            <h2><a href="/usr{{if .isLogin}}/shell{{else}}/auth{{end}}">Моя поличка</a></h2>
           </div>	
                   <div class="mbl-wrapper__nav spoiler-title">
             <h2>
-                {{if .notLogin}}
-                    <a href="/usr/auth">Реєстрація/Авторізація</a>
-                {{else}}
+                {{if .isLogin}}
                     <a href="/usr/logout">Вихід</a>
+                {{else}}
+                    <a href="/usr/auth">Реєстрація/Авторізація</a>
                 {{end}}
             </h2>
           </div>				
@@ -170,9 +170,6 @@
 		<h1>Про нас</h1>
 	</div>	
 </section>
-    <div>
-        <a id="getBook" data-name="Взяти книгу" title="Взяти книгу" class="btn-wrap__footer button" href="#"><span>Взяти книгу</span></a>
-    </div>
 <section id="pages_view">
   <div class="container">
     <div class="cramps">
@@ -230,12 +227,13 @@
           <p class="contacts-item__description">&nbsp;</p>
         </div>
                     </div>
+        <!-- Popup Попап
               <div class="col-md-6">
                 <div class="btn-wrap">
                   <a id="sendPaymentBtn" data-name="Підтрімати проект" title="Підтрімати проект" class="btn-wrap__footer button" href="#"><span>Підтрімати проект</span></a>
                 </div>
               </div>
-              
+            -->
       </div>
   </div>
 </section>
@@ -317,14 +315,14 @@
 					</div>
             <!--_d
                   <div class="col-md-4 link-other">
-            <a href="distribution-map.html"><h2>Розповсюдження</h2></a>
+            <a href="distribution-map.html"><h2>Розповсюдження</h2></a>а
                       </div>
               -->
 				<div class="col-md-4 link-other">
-          <a href="/usr/search"><h2>Пошук</h2></a>
+          <a href="/usr{{if .isLogin}}/search{{else}}/auth{{end}}"><h2>Пошук</h2></a>
 					</div>
 				<div class="col-md-4 link-other">
-          <a href="/usr/shell"><h2>Моя поличка</h2></a>
+          <a href="/usr{{if .isLogin}}/shell{{else}}/auth{{end}}"><h2>Моя поличка</h2></a>
 					</div>
 				</div>
         </div>

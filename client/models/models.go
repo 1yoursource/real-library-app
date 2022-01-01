@@ -51,9 +51,9 @@ type (
 	}
 
 	Dept struct {
-		TicketNumber string `form:"ticketNumber"`
-		Book         string `form:"book"`
-		ReturnDate   string `form:"returnDate"`
+		TicketNumber string `form:"ticketNumber" bson:"ticketNumber"`
+		Book         string `form:"book" bson:"book"`
+		ReturnDate   string `form:"returnDate" bson:"returnDate"`
 	}
 )
 

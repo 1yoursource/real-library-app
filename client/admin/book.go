@@ -153,7 +153,7 @@ func (b *Book) GetDept(c *gin.Context) {
 	if err := b.Storage.GetByQuery(models.Obj{"takenBy":models.Obj{"$ne":""}}).All(&books); err != nil {
 		fmt.Println("admin book Update -> Bind: err = ", err)
 		if strings.Contains(err.Error(),"not found") {
-			c.JSON(http.StatusOK,models.Obj{"error":nil,"result":nil})
+			c.JSON(http.StatusOK,models.Obj{"error":nil,"result":[]models.Dept{}})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
@@ -164,7 +164,7 @@ func (b *Book) GetDept(c *gin.Context) {
 	switch data.Filter {
 	case "1":
 		for _, v := range books {
-			if v.ReturnDate.Before(time.Now()) {
+			if v.ReturnDate.After(time.Now()) {
 				continue
 			}
 			depts = append(depts, models.Dept{
@@ -198,8 +198,6 @@ func (b *Book) checkUniq(newBook models.Book) error {
 		return err
 	}
 
-	fmt.Println("n",newBook)
-	fmt.Println("nb",book)
 	switch {
 	case book.Id == 0:
 		return errors.New("does not exist")

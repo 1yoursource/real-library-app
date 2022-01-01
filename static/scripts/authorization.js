@@ -18,11 +18,10 @@ $(function() {
             type: 'POST',
             timeout: 15000,
             success: function(result) {
-            console.log("r: ",result)
                 if (result.error === null) {
                     window.location = result.url;
                 } else {
-                    console.log("eeeeeeeerr")
+                       alert(result.error);
                     window.href="/"
                 }
             },
@@ -43,7 +42,7 @@ $(function() {
                 if (result.error === null) {
                     window.location = result.url;
                 } else {
-                    console.log("eeeeeeeerr")
+                       alert(result.error);
                     window.href="/"
                 }
             },

@@ -89,10 +89,14 @@
               <ul class="nav-right__menu">
                                   
                           <li data-id="#submenu_61" class="nav-link">
-                            <a href="/usr/shell" class="nav-link__item">Особистий кабінет</a>
+                            <a href="/usr{{if .isLogin}}/shell{{else}}/auth{{end}}" class="nav-link__item">Моя поличка</a>
                             </li>
                           <li data-id="#submenu_7" class="nav-link submenu_li">
-                              <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{if .isLogin}}
+                                <a href="/usr/logout" class="nav-link__item">Вихід</a>
+                              {{else}}
+                                <a href="/usr/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                              {{end}}
                           </li>
               </ul>
                             <div class="gamburger-icon">
@@ -134,10 +138,16 @@
                     <div class="mbl-wrapper__nav spoiler-title">
           </div>	
           <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/usr/shell">Особистий кабінет</a></h2>
+            <h2><a href="/usr{{if .isLogin}}/shell{{else}}/auth{{end}}">Моя поличка</a></h2>
           </div>	
                   <div class="mbl-wrapper__nav spoiler-title">
-            <h2><a href="/usr/auth">Реєстрація/Авторізація</a></h2>
+            <h2>
+                {{if .isLogin}}
+                    <a href="/usr/logout">Вихід</a>
+                {{else}}
+                    <a href="/usr/auth">Реєстрація/Авторізація</a>
+                {{end}}
+            </h2>
           </div>				
                 <div class="mbl-blind-nav">
           <ul>
@@ -157,7 +167,7 @@
     </header>
 		<section class="section-title">
 	<div class="container">
-		<h1>Особистий кабінет</h1>
+		<h1>Моя поличка</h1>
 	</div>	
 </section>
 <section id="pages_view">
@@ -165,7 +175,7 @@
     <div class="cramps">
           <ul>
             <li class="deactive"><a href="/usr/main">Головна</a></li>
-              <li class="active-cramps"><a href="/usr/shell" itemprop="url"><span itemprop="title">Особистий кабінет</span></a></li>
+              <li class="active-cramps"><a href="/usr/shell" itemprop="url"><span itemprop="title">Моя поличка</span></a></li>
           </ul>
             </div>
     <div class="row gutters10 pages-view">				
@@ -177,12 +187,26 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="dapps" role="tabpanel" aria-labelledby="home-tab">
             <div class="container-fluid">
-              <div class="form-header title-feedback">
-                <h2>Особисті дані</h2>
+              <div class="col-md-4 feedback-left-block">
+                  <div class="form-group">
+                <h2>{{.userfName}} {{.userlName}} {{.usersName}}</h2>
+                  </div>
+                  <div class="form-group">
+                      <h2>{{.userFaculty}}</h2>
+                  </div>
+                  <div class="form-group">
+                <h2>{{.userEmail}}</h2>
+                  </div>
+                  <div class="form-group">
+                <h2>{{.userTicketNumber}}</h2>
+                  </div>
+                  <!--
                 <button class="btn-edit">
                   <img src="../static/assets/img/icon/pen.svg" alt="">
                 </button>
+                  -->
               </div>
+                <!--
               <form action="/" method="POST" id="add-personal-data-el-form" class="row gutters10 form-feedback">
                 <div class="col-md-6 feedback-left-block">
                   <div class="form-group">
@@ -207,6 +231,7 @@
                 <div class="btn-wrap grooming">
                   <a data-name="Запросити верифікацію" title="Запросити верифікацію" class="btn-wrap__footer button" href="#"><span>Запросити верифікацію</span></a>
                 </div>
+                -->
             </div>
         </div>
         <div class="tab-pane fade" id="explorer" role="tabpanel" aria-labelledby="profile-tab">

@@ -92,7 +92,7 @@
                     </li>
                     <li data-id="#submenu_7" class="nav-link submenu_li">
                         {{if .isLogin}}
-                            <a href="/adm/logout" class="nav-link__item">Вихід</a>
+                            <a href="/logout" class="nav-link__item">Вихід</a>
                         {{else}}
                             <a href="/adm/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                         {{end}}
@@ -142,7 +142,7 @@
             <div class="mbl-wrapper__nav spoiler-title">
                 <h2>
                     {{if .isLogin}}
-                        <a href="/adm/logout">Вихід</a>
+                        <a href="/logout">Вихід</a>
                     {{else}}
                         <a href="/adm/auth">Реєстрація/Авторізація</a>
                     {{end}}
