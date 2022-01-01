@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -118,8 +117,6 @@ func checkIsLoginUsr(c *gin.Context) {
 		fmt.Println("Log err ", err)
 		switch {
 		case err != nil:
-			break
-		case !strings.Contains(coockie,"*lib"):
 			break
 		default:
 			return
