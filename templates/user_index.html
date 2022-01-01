@@ -137,11 +137,11 @@
             <div class="mbl-wrapper__nav spoiler-title">
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/usr/shell">Особистий кабінет</a></h2>
+                <h2><a href="/usr/shell">Моя поличка</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
                 <h2>
-                    {{if .notLogin}}
+                    {{if .isLogin}}
                         <a href="/usr/auth">Реєстрація/Авторізація</a>
                     {{else}}
                         <a href="/usr/logout">Вихід</a>
