@@ -31,14 +31,20 @@ func getCookie(c *gin.Context, name string) (string, error) {
 	}
 
 	if len(data) == 0 {
+		return "", errors.New("empty cookies")
+	}
+
+	var loginCookie = name == "lib-login"
+
+	if loginCookie && !strings.Contains(data, "lib") {
 		return "", errors.New("")
 	}
 
-	if !strings.Contains(data, "lib") {
-		return "", errors.New("")
+	if loginCookie {
+		data = strings.Split(data, "*")[0] // при обращении к [0] никогда не паникнёт, из-за проверки выше (пример куки - abrakadabra18@gmail.com*lib)
 	}
 
-	return strings.Split(data, "*")[0], nil // при обращении к [0] никогда не паникнёт, из-за проверки выше (пример куки - abrakadabra18@gmail.com*lib)
+	return data,nil
 }
 
 func setCookie(c *gin.Context, name string, value string) {

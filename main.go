@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/carlescere/scheduler"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -45,7 +45,7 @@ func main() {
 	r.POST("/ajax/:module/:method", ajax)
 
 	r.POST("/ajax2/:customer/:module/:method", ajax2)
-	r.GET("/adm/:page", adminPages.Handler)
+	r.GET("/adm/:page", checkIsLoginAdm, adminPages.Handler)
 	r.GET("/usr/:page", checkIsLoginUsr, userPages.Handler)
 
 	fmt.Println("Application started on port 2200")
@@ -53,7 +53,7 @@ func main() {
 	if err := r.Run(":2200"); err != nil {
 		fmt.Println("main.go -> main: err = ", err)
 	}
-	scheduler.Every().Day().At("00:30:00").Run(MakeDebtorsList)
+	//scheduler.Every().Day().At("00:30:00").Run(MakeDebtorsList)
 }
 func ajax(c *gin.Context) {
 	c.Header("Expires", time.Now().String())
@@ -99,37 +99,54 @@ func usr(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Module not found!")
 	}
 }
-
-//func checkIsLoginAdm(c *gin.Context) {
-//	if needCheckLogin(c.Param("page")) {
-//		coockie, err := getCookie(c,"lib-login")
-//		if err != nil {
-//			c.Redirect(http.StatusMovedPermanently,"")
-//		}
-//	}
-//}
+func checkIsLoginAdm(c *gin.Context) {
+	checkIsLogin(c, "lib-admin")
+}
 
 func checkIsLoginUsr(c *gin.Context) {
-	fmt.Println("Log check")
-	if needCheckLogin(c.Param("page")) {
-		coockie, err := getCookie(c,"lib-login")
-		fmt.Println("Log coockie ", coockie)
-		fmt.Println("Log err ", err)
-		switch {
-		case err != nil:
-			break
-		default:
-			return
-		}
-		c.Redirect(http.StatusMovedPermanently,"auth")
+	checkIsLogin(c, "lib-login")
+}
+
+func checkIsLogin(c *gin.Context, cookieName string) {
+	var page = c.Param("page")
+
+	if !needCheckLogin(page) {
+		return
 	}
+
+	coockie, err := getCookie(c, cookieName)
+
+	var (
+		emptyCookies = len(coockie) == 0
+		code         = http.StatusMovedPermanently
+		location     = "auth"
+	)
+
+	switch {
+	case err != nil && !strings.Contains(err.Error(),"http: named cookie not present"):
+		break
+	case page == "logout" && emptyCookies: // якщо ти не залогінений, вихід повинен бути недоступний, редірект на головну
+		location = "main"
+		break
+	case page == "auth" && emptyCookies:
+		return
+	case emptyCookies:
+		break
+	case page == "auth": // якщо ти вже залогінений, сторінка аутентифікації повинна бути недоступна, редірект на головну
+		code, location = http.StatusFound, "main"
+		break
+	default:
+		return
+	}
+	c.Redirect(code, location)
+
 }
 
 func needCheckLogin(page string) bool {
 	switch page {
-	case "search", "shell":
-		return true
-	default: // main, auth, about, logout
+	case "about", "main":
 		return false
+	default: // search, shell, auth, logout
+		return true
 	}
 }

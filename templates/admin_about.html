@@ -65,7 +65,7 @@
                                               </li>
                             -->
                     <li data-id="#submenu_6" class="nav-link submenu_li">
-                        <a href="/adm/search" class="nav-link__item">Пошук</a>
+                        <a href="/adm{{if .isLogin}}/search{{else}}/auth{{end}}" class="nav-link__item">Пошук</a>
                     </li>
                 </ul>
                 <div class="nav-button__mbl">
@@ -89,13 +89,13 @@
                 <ul class="nav-right__menu">
 
                     <li data-id="#submenu_61" class="nav-link">
-                        <a href="/adm/shell" class="nav-link__item">Особистий кабінет</a>
+                        <a href="/adm{{if .isLogin}}/shell{{else}}/auth{{end}}" class="nav-link__item">Кабінет адміністратора</a>
                     </li>
                     <li data-id="#submenu_7" class="nav-link submenu_li">
-                        {{if .notLogin}}
-                            <a href="/adm/auth" class="nav-link__item">Реєстрація/Авторізація</a>
+                        {{if .isLogin}}
+                            <a href="/adm/logout" class="nav-link__item">Вихід</a>
                         {{else}}
-                            <a href="/logout" class="nav-link__item">Вихід</a>
+                            <a href="/adm/auth" class="nav-link__item">Реєстрація/Авторізація</a>
                         {{end}}
                     </li>
                 </ul>
@@ -133,16 +133,16 @@
             </div>
             -->
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/adm/search">Пошук</a></h2>
+                <h2><a href="/adm{{if .isLogin}}/search{{else}}/auth{{end}}">Пошук</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
-                <h2><a href="/adm/shell">Моя поличка</a></h2>
+                <h2><a href="/adm{{if .isLogin}}/shell{{else}}/auth{{end}}">Кабінет адміністратора</a></h2>
             </div>
             <div class="mbl-wrapper__nav spoiler-title">
                 <h2>
-                    {{if .notLogin}}
+                    {{if .isLogin}}
                         <a href="/adm/auth">Реєстрація/Авторізація</a>
                     {{else}}
                         <a href="/logout">Вихід</a>
@@ -320,10 +320,10 @@
                           </div>
                   -->
                 <div class="col-md-4 link-other">
-                    <a href="/adm/search"><h2>Пошук</h2></a>
+                    <a href="/adm{{if .isLogin}}/search{{else}}/auth{{end}}"><h2>Пошук</h2></a>
                 </div>
                 <div class="col-md-4 link-other">
-                    <a href="/adm/shell"><h2>Моя поличка</h2></a>
+                    <a href="/adm{{if .isLogin}}/shell{{else}}/auth{{end}}"><h2>Кабінет адміністратора</h2></a>
                 </div>
             </div>
         </div>

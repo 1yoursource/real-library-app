@@ -77,12 +77,22 @@ $(function() {
             return
         }
         for (var i = 0; i<result.length; i++) {
-            $("#adm_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
-            '<td>'+result[i].Id+'</td>'+
-            '<td>'+result[i].Name+'</td>'+
-            '<td>'+result[i].Author+'</td>'+
-            //'<td><button onclick="book_edit(this.id)" id="'+result.result[i].Id+'" class="adm_book_edit">Edit</button>'+
-            '<td><button onclick="book_del(this.id)" id="'+result[i].Id+'" class="adm_book_delete">Delete</button></td>'+
-            '</tr>');
+            if (result[i].takenBy != "") {
+                $("#adm_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
+                '<td>'+result[i].Id+'</td>'+
+                '<td>'+result[i].Name+'</td>'+
+                '<td>'+result[i].Author+'</td>'+
+                //'<td><button onclick="book_edit(this.id)" id="'+result.result[i].Id+'" class="adm_book_edit">Edit</button>'+
+                '<td><b>Взята читачем:</b><br><i>'+result[i].takenBy+'</i></td>'+
+                '</tr>');
+            } else {
+                $("#adm_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
+                '<td>'+result[i].Id+'</td>'+
+                '<td>'+result[i].Name+'</td>'+
+                '<td>'+result[i].Author+'</td>'+
+                //'<td><button onclick="book_edit(this.id)" id="'+result.result[i].Id+'" class="adm_book_edit">Edit</button>'+
+                '<td><button onclick="book_del(this.id)" id="'+result[i].Id+'" class="adm_book_delete">Видалити</button></td>'+
+                '</tr>');
+            }
         }
     }
