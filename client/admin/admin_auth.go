@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gofrs/uuid"
 	"lib-client-server/auto_incrementer"
 	"lib-client-server/client/helper"
 	"lib-client-server/client/models"
@@ -30,6 +31,13 @@ type (
 		Email    string `bson:"email"`
 		Password []byte `bson:"password"`
 	}
+
+	CodeGenerator struct {
+		Id       uint64 `bson:"_id"`
+		AdminId    uint64 `bson:"adminId"`
+		Code string `bson:"code"`
+		Used bool `bson:"used"`
+	}
 )
 
 func CreateAuthModule() *AuthModule {
@@ -37,15 +45,58 @@ func CreateAuthModule() *AuthModule {
 }
 
 func (a *AuthModule) Ajax(c *gin.Context) {
-	fmt.Println("HEHHHAJSKDHJASJD")
 	switch c.Param("method") {
 	case "registration":
 		a.Registration(c)
 	case "authorization":
 		a.Authorization(c)
+	case "generate":
+		a.GenerateCode(c)
 	default:
 		c.String(http.StatusBadRequest, "Method not found in module \"PRO<O\"!")
 	}
+}
+
+func (a *AuthModule) GenerateCode(c *gin.Context) {
+	inputData := struct{
+		AdminId uint64 `form:"adminId"`
+	}{}
+
+	if err := c.Bind(&inputData); err != nil {
+		fmt.Println("auth.go -> GenerateCode -> Bind: err = ", err)
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "wrong"})
+		return
+	}
+
+	if inputData.AdminId == 0 {
+		fmt.Println("auth.go -> GenerateCode: err = unauthorized request")
+		c.JSON(http.StatusUnauthorized, models.Obj{"error": "unauthorized request"})
+		return
+	}
+
+	code, err := uuid.NewV4()
+	if err != nil {
+		fmt.Println("auth.go -> GenerateCode -> NewV4: err = ",err)
+		c.JSON(http.StatusUnauthorized, models.Obj{"error": err.Error()})
+		return
+	}
+
+	var codeStr = fmt.Sprint(code)
+
+	var cd = CodeGenerator{auto_incrementer.AI.Next("codeGenerator"),inputData.AdminId,codeStr,false}
+
+	if err := database.Connect("localhost",
+		"libDB",
+		"libraryDatabase",
+	).C("codeGenerator").Insert(cd); err != nil {
+		fmt.Println("auth.go -> GenerateCode -> Insert: err = ",err)
+		c.JSON(http.StatusUnauthorized, models.Obj{"error": err.Error()})
+		return
+	}
+
+	fmt.Println("code: ",codeStr)
+
+	c.JSON(http.StatusOK,models.Obj{"error":nil,"result":codeStr})
 }
 
 func (a *AuthModule) Registration(c *gin.Context) {
@@ -57,9 +108,26 @@ func (a *AuthModule) Registration(c *gin.Context) {
 	}
 
 	if inputData.checkEmpty() {
+		fmt.Println("auth.go -> Registration -> checkEmpty: err = empty data")
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "please, fill all field"})
 		return
 	}
+
+	if !inputData.checkCode() {
+		fmt.Println("auth.go -> Registration -> checkCode: err = bad code")
+		c.JSON(http.StatusInternalServerError, models.Obj{"error": "bad admin code"})
+		return
+	}
+
+	defer func() {
+		if err := database.Connect("localhost",
+			"libDB",
+			"libraryDatabase",
+		).C("codeGenerator").Update(models.Obj{"code":inputData.Code},models.Obj{"$set":models.Obj{"used":true}}); err != nil {
+			fmt.Println("auth.go -> Registration -> Remove: err = ",err)
+			//c.JSON(http.StatusInternalServerError, models.Obj{"error": err.Error()})
+		}
+	}()
 
 	if !inputData.passwordCompare() {
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "please, use equals passwords"})
@@ -72,7 +140,6 @@ func (a *AuthModule) Registration(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, models.Obj{"error": "doesn't create"})
 		return
 	}
-
 
 	a.Login(c, inputData.Email, id)
 }
@@ -113,7 +180,22 @@ func (r *Registration) passwordCompare() bool {
 	return r.Password == r.PasswordSubmit
 }
 
+func (r *Registration) checkCode() bool {
+	 count, err := database.Connect("localhost",
+		"libDB",
+		"libraryDatabase",
+	).C("codeGenerator").Find(models.Obj{"code":r.Code}).Count()
+	if err != nil {
+		return false
+	}
+
+	return count == 1
+}
+
 func (r *Registration) checkEmpty() bool {
+	if len(r.Code) == 0 {
+		return true
+	}
 	if len(r.Email) == 0 {
 		return true
 	}

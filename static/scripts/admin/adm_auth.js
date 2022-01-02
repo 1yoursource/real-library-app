@@ -4,12 +4,12 @@ function getById(id) {
 
 $(function() {
     $('#regSubmitlBtn').on('click tap',function(){
-    alert("hreer");
         $.ajax({
             data: {
                 email : getById("reg_email").value,
                 password : getById("reg_password").value,
                 passwordSubmit : getById("reg_password-confirmation").value,
+                code : getById("reg_code").value,
             },
             url: '/ajax2/adm/auth/registration',
             type: 'POST',
