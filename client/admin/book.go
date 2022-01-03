@@ -59,6 +59,9 @@ func (b *Book) GetAll(c *gin.Context) {
 	case "2":
 		err = b.Storage.GetByQuery(models.Obj{"author": input.Value}).All(&books)
 	case "3": // все книги пользователя
+		if len(input.Value) == 0 {
+			break
+		}
 		err = b.Storage.GetByQuery(models.Obj{"takenBy": input.Value}).All(&books)
 	default:
 		c.JSON(http.StatusBadRequest, models.Obj{"error": "unknown filter", "result": []models.Book{}})
