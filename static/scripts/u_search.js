@@ -77,12 +77,20 @@ $(function() {
             return
         }
         for (var i = 0; i<result.length; i++) {
-        console.log("I: ",result[i])
-            $("#user_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
-            '<td>'+result[i].Id+'</td>'+
-            '<td>'+result[i].Name+'</td>'+
-            '<td>'+result[i].Author+'</td>'+
-            '<td><button onclick="book_take(this.id)" id="'+result[i].Id+'" class="book_take">Взяти</button></td>'+
-            '</tr>');
+            if (result[i].takenBy != "") {
+                $("#user_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
+                '<td>'+result[i].Id+'</td>'+
+                '<td>'+result[i].Name+'</td>'+
+                '<td>'+result[i].Author+'</td>'+
+                '<td><b>Взята іншим читачем</b></td>'+
+                '</tr>');
+            } else {
+                $("#user_search_table").append('<tr class="table-row-'+result[i].Id+'">'+
+                '<td>'+result[i].Id+'</td>'+
+                '<td>'+result[i].Name+'</td>'+
+                '<td>'+result[i].Author+'</td>'+
+                '<td><button onclick="book_take(this.id)" id="'+result[i].Id+'" class="book_take">Взяти</button></td>'+
+                '</tr>');
+            }
         }
     }

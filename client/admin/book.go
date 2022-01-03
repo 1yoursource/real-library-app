@@ -57,8 +57,10 @@ func (b *Book) GetAll(c *gin.Context) {
 	case "1":
 		err = b.Storage.GetAll().All(&books)
 	case "2":
+		err = b.Storage.GetByQuery(models.Obj{"name": input.Value}).All(&books)
+	case "3":
 		err = b.Storage.GetByQuery(models.Obj{"author": input.Value}).All(&books)
-	case "3": // все книги пользователя
+	case "4": // все книги пользователя
 		if len(input.Value) == 0 {
 			break
 		}
